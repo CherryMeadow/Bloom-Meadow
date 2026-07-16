@@ -22,6 +22,8 @@ function Expenses({ user }) {
   }
 
  async function addExpense() {
+   console.log("Add expense clicked");
+   
   const { data, error } = await supabase
     .from("expenses")
     .insert([
