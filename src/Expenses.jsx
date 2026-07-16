@@ -48,6 +48,20 @@ function Expenses({ user }) {
   setNote("");
   loadExpenses();
 }
+
+async function deleteExpense(id) {
+  const { error } = await supabase
+    .from("expenses")
+    .delete()
+    .eq("id", id);
+
+  if (error) {
+    alert(error.message);
+    return;
+  }
+
+  loadExpenses();
+}
   return (
     <div className="section">
       <h2>💸 Expenses</h2>
@@ -82,13 +96,18 @@ function Expenses({ user }) {
       <h3>Recent Expenses</h3>
 
       {expenses.map((expense) => (
-        <div className="card" key={expense.id}>
-          <p>
-            ${expense.amount} — {expense.category}
-          </p>
-          <small>{expense.note}</small>
-        </div>
-      ))}
+  <div className="card" key={expense.id}>
+    <p>
+      ${expense.amount} — {expense.category}
+    </p>
+
+    <small>{expense.note}</small>
+
+    <button onClick={() => deleteExpense(expense.id)}>
+      🗑️ Delete
+    </button>
+  </div>
+))}
     </div>
   );
 }
