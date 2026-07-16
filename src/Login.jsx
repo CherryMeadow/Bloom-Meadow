@@ -26,7 +26,7 @@ function Login({ onLogin }) {
     if (result.error) {
       alert(result.error.message);
     } else {
-      onLogin();
+      onLogin(result.data.user);
     }
   }
 
