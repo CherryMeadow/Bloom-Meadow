@@ -58,7 +58,7 @@ const [page, setPage] = useState("home");
   }
 
   if (!user) {
-    return <Login onLogin={() => setUser(true)} />;
+    return <Login onLogin={(loggedInUser) => setUser(loggedInUser)} />
   }
 
   if (!budget) {
