@@ -32,7 +32,9 @@ function Expenses({ user }) {
         amount: Number(amount),
         category,
         note,
-        date: new Date(),
+        console.log(user);
+        console.log(amount, category, note);
+        date: new Date().toISOString().split("T")[0],
       },
     ]);
 
