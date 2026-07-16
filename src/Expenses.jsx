@@ -8,9 +8,11 @@ function Expenses({ user }) {
   const [note, setNote] = useState("");
   const [paymentAccount, setPaymentAccount] = useState("Checking");
   
-  useEffect(() => {
+useEffect(() => {
+  if (user) {
     loadExpenses();
-  }, []);
+  }
+}, [user]);
 
  async function loadExpenses() {
   const { data, error } = await supabase
@@ -65,7 +67,8 @@ async function deleteExpense(id) {
     console.log(error);
     return;
   }
-
+  await loadExpenses();
+}
   // remove it from the screen immediately
   setExpenses((current) =>
     current.filter((expense) => expense.id !== id)
@@ -119,7 +122,13 @@ async function deleteExpense(id) {
 
     <small>{expense.note}</small>
 
-    <button onClick={() => deleteExpense(expense.id)}>
+   <button
+  onClick={() => {
+    if (window.confirm("Delete this expense?")) {
+      deleteExpense(expense.id);
+    }
+  }}
+>
       🗑️ Delete
     </button>
   </div>
