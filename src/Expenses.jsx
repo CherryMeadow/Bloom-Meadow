@@ -12,16 +12,20 @@ function Expenses({ user }) {
     loadExpenses();
   }, []);
 
-  async function loadExpenses() {
-    const { data } = await supabase
-      .from("expenses")
-      .select("*")
-      .eq("user_id", user.id)
-      .order("created_at", { ascending: false });
+ async function loadExpenses() {
+  const { data, error } = await supabase
+    .from("expenses")
+    .select("*")
+    .eq("user_id", user.id)
+    .order("created_at", { ascending: false });
 
-    setExpenses(data || []);
+  if (error) {
+    console.log(error);
+    return;
   }
 
+  setExpenses(data || []);
+}
 async function addExpense() {
   console.log("Add expense clicked");
   console.log(user);
