@@ -21,22 +21,29 @@ function Expenses({ user }) {
     setExpenses(data || []);
   }
 
-  async function addExpense() {
-    await supabase.from("expenses").insert([
+ async function addExpense() {
+  const { data, error } = await supabase
+    .from("expenses")
+    .insert([
       {
         user_id: user.id,
-        amount,
+        amount: Number(amount),
         category,
         note,
         date: new Date(),
       },
     ]);
 
-    setAmount("");
-    setNote("");
-    loadExpenses();
+  if (error) {
+    alert(error.message);
+    console.log(error);
+    return;
   }
 
+  setAmount("");
+  setNote("");
+  loadExpenses();
+}
   return (
     <div className="section">
       <h2>💸 Expenses</h2>
