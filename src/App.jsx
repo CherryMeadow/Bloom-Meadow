@@ -7,7 +7,8 @@ import "./index.css";
 function App() {
   const [user, setUser] = useState(null);
   const [budget, setBudget] = useState(null);
-const [page, setPage] = useState("home");
+  const [expenses, setExpenses] = useState([]);
+  const [page, setPage] = useState("home");
   
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
@@ -19,13 +20,31 @@ const [page, setPage] = useState("home");
     } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user || null);
     });
+const checkingSpent = expenses
+  .filter((expense) => expense.payment_account === "Checking")
+  .reduce((total, expense) => total + Number(expense.amount), 0);
 
+const savingsSpent = expenses
+  .filter((expense) => expense.payment_account === "Savings")
+  .reduce((total, expense) => total + Number(expense.amount), 0);
+
+const currentChecking = budget.checking - checkingSpent;
+
+const currentSavings = budget.savings - savingsSpent;
     return () => subscription.unsubscribe();
   }, []);
 
   useEffect(() => {
     if (user) {
       loadBudget();
+        async function loadExpenses() {
+  const { data } = await supabase
+    .from("expenses")
+    .select("*")
+    .eq("user_id", user.id);
+
+  setExpenses(data || []);
+}
     }
   }, [user]);
 
@@ -38,6 +57,7 @@ const [page, setPage] = useState("home");
 
     if (data) {
       setBudget(data);
+      loadExpenses();
     } else {
       const { data: newBudget } = await supabase
         .from("budget_data")
@@ -100,12 +120,12 @@ if (page === "expenses") {
 
         <div className="card">
           <h2>💙 Checking</h2>
-          <p>${budget.checking}</p>
+         <p>${currentChecking}</p>
         </div>
 
         <div className="card">
           <h2>🌱 Emergency Savings</h2>
-          <p>${budget.savings}</p>
+      <p>${currentSavings}</p>
         </div>
 
         <div className="card">
