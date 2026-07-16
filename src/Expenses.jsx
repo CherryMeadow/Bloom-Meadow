@@ -21,10 +21,12 @@ function Expenses({ user }) {
     setExpenses(data || []);
   }
 
- async function addExpense() {
-   console.log("Add expense clicked");
-   
-  const { data, error } = await supabase
+async function addExpense() {
+  console.log("Add expense clicked");
+  console.log(user);
+  console.log(amount, category, note);
+
+  const { error } = await supabase
     .from("expenses")
     .insert([
       {
@@ -32,8 +34,6 @@ function Expenses({ user }) {
         amount: Number(amount),
         category,
         note,
-        console.log(user);
-        console.log(amount, category, note);
         date: new Date().toISOString().split("T")[0],
       },
     ]);
