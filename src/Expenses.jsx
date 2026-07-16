@@ -63,8 +63,10 @@ async function deleteExpense(id) {
     return;
   }
 
-  console.log("Deleted successfully");
-  loadExpenses();
+  // remove it from the screen immediately
+  setExpenses((currentExpenses) =>
+    currentExpenses.filter((expense) => expense.id !== id)
+  );
 }
   return (
     <div className="section">
