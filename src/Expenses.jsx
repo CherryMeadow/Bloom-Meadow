@@ -124,10 +124,13 @@ function Expenses({ user }) {
             ${expense.amount} — {expense.category}
           </p>
 
-          <small>
-            {expense.note}
-          </small>
-
+         <small>
+  {expense.note}
+  <br />
+  📅 {expense.date}
+  <br />
+  💳 Paid from: {expense.payment_account}
+</small>
           <p>
             Paid from: {expense.payment_account}
           </p>
