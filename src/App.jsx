@@ -24,12 +24,14 @@ function App() {
     return () => subscription.unsubscribe();
   }, []);
 
+
   useEffect(() => {
     if (user) {
       loadBudget();
       loadExpenses();
     }
   }, [user]);
+
 
   async function loadBudget() {
     const { data, error } = await supabase
@@ -53,6 +55,7 @@ function App() {
       .select("*")
       .eq("user_id", user.id)
       .order("created_at", { ascending: false });
+
 
     if (error) {
       console.log(error);
@@ -117,6 +120,7 @@ function App() {
 
 
   if (page === "expenses") {
+
     return (
       <div className="app">
 
@@ -151,13 +155,17 @@ function App() {
   return (
     <div className="app">
 
+
       <header className="header">
 
-        <h1>🌸 Bloom Meadow</h1>
+        <h1>
+          🌸 Bloom Meadow
+        </h1>
 
         <p>
           Welcome back, Tami 🌿
         </p>
+
 
         <button onClick={logout}>
           Log Out
@@ -173,17 +181,28 @@ function App() {
         <div className="card">
           <h2>💙 Checking</h2>
           <p>
-            ${currentChecking}
+            ${currentChecking.toFixed(2)}
           </p>
         </div>
+
+
+
+        <div className="card">
+          <h2>🌿 Safe to Spend</h2>
+          <p>
+            ${currentChecking.toFixed(2)}
+          </p>
+        </div>
+
 
 
         <div className="card">
           <h2>🌱 Emergency Savings</h2>
           <p>
-            ${currentSavings}
+            ${currentSavings.toFixed(2)}
           </p>
         </div>
+
 
 
         <div className="card">
@@ -194,10 +213,11 @@ function App() {
         </div>
 
 
+
         <div className="card">
           <h2>💳 Credit Card</h2>
           <p>
-            ${budget.credit_card_balance}
+            ${Number(budget.credit_card_balance).toFixed(2)}
           </p>
         </div>
 
