@@ -5,6 +5,7 @@ import "./index.css";
 
 function App() {
   const [user, setUser] = useState(null);
+  const [budget, setBudget] = useState(null);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
@@ -20,8 +21,46 @@ function App() {
     return () => subscription.unsubscribe();
   }, []);
 
+  useEffect(() => {
+    if (user) {
+      loadBudget();
+    }
+  }, [user]);
+
+  async function loadBudget() {
+    const { data, error } = await supabase
+      .from("budget_data")
+      .select("*")
+      .eq("user_id", user.id)
+      .single();
+
+    if (data) {
+      setBudget(data);
+    } else {
+      const { data: newBudget } = await supabase
+        .from("budget_data")
+        .insert([
+          {
+            user_id: user.id,
+            checking: 258,
+            savings: 2921,
+            cruise_goal: 800,
+            credit_card_balance: 1517,
+          },
+        ])
+        .select()
+        .single();
+
+      setBudget(newBudget);
+    }
+  }
+
   if (!user) {
     return <Login onLogin={() => setUser(true)} />;
+  }
+
+  if (!budget) {
+    return <p>Loading Bloom Meadow 🌸</p>;
   }
 
   return (
@@ -32,42 +71,29 @@ function App() {
       </header>
 
       <section className="cards">
-        <div className="card">
-          <h2>💙 Safe to Spend</h2>
-          <p>$0.00</p>
-        </div>
 
         <div className="card">
-          <h2>🏦 Checking</h2>
-          <p>$258</p>
+          <h2>💙 Checking</h2>
+          <p>${budget.checking}</p>
         </div>
 
         <div className="card">
           <h2>🌱 Emergency Savings</h2>
-          <p>$2,921</p>
+          <p>${budget.savings}</p>
         </div>
 
         <div className="card">
           <h2>🚢 Cruise Fund</h2>
-          <p>$0 / $800</p>
+          <p>
+            $0 / ${budget.cruise_goal}
+          </p>
         </div>
-      </section>
 
-      <section className="section">
-        <h2>📅 Upcoming Bills</h2>
-        <ul>
-          <li>Marriott Bonvoy: $17.83 (July 29)</li>
-          <li>National Grid: $38.96 (July 31)</li>
-          <li>Credit Card: $50 (Aug 7-9)</li>
-          <li>Paramount+: $13.99 (Aug 12)</li>
-        </ul>
-      </section>
+        <div className="card">
+          <h2>💳 Credit Card</h2>
+          <p>${budget.credit_card_balance}</p>
+        </div>
 
-      <section className="section">
-        <h2>🌸 Goals</h2>
-        <p>🚢 Cruise Goal: $800</p>
-        <p>🌿 Emergency Savings</p>
-        <p>💳 Credit Card: $1,517 / $1,500 limit</p>
       </section>
 
       <nav className="nav">
@@ -76,6 +102,7 @@ function App() {
         <button>📅 Bills</button>
         <button>🌸 Goals</button>
       </nav>
+
     </div>
   );
 }
