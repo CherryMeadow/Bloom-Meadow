@@ -40,16 +40,13 @@ function App() {
 
     if (error) {
       console.log(error);
+      return;
     }
 
-    if (data) {
-      setBudget(data);
-    }
+    setBudget(data);
   }
-async function logout() {
-  await supabase.auth.signOut();
-  setUser(null);
-}
+
+
   async function loadExpenses() {
     const { data, error } = await supabase
       .from("expenses")
@@ -65,6 +62,13 @@ async function logout() {
     setExpenses(data || []);
   }
 
+
+  async function logout() {
+    await supabase.auth.signOut();
+    setUser(null);
+  }
+
+
   if (!user) {
     return (
       <Login
@@ -73,9 +77,11 @@ async function logout() {
     );
   }
 
+
   if (!budget) {
     return <p>Loading Bloom Meadow 🌸</p>;
   }
+
 
   const checkingSpent = expenses
     .filter(
@@ -88,6 +94,7 @@ async function logout() {
       0
     );
 
+
   const savingsSpent = expenses
     .filter(
       (expense) =>
@@ -99,11 +106,14 @@ async function logout() {
       0
     );
 
+
   const currentChecking =
     Number(budget.checking) - checkingSpent;
 
+
   const currentSavings =
     Number(budget.savings) - savingsSpent;
+
 
 
   if (page === "expenses") {
@@ -113,6 +123,7 @@ async function logout() {
         <Expenses user={user} />
 
         <nav className="nav">
+
           <button onClick={() => setPage("home")}>
             🌱 Home
           </button>
@@ -128,6 +139,7 @@ async function logout() {
           <button>
             🌸 Goals
           </button>
+
         </nav>
 
       </div>
@@ -135,28 +147,42 @@ async function logout() {
   }
 
 
+
   return (
     <div className="app">
 
-     <header className="header">
-  <h1>🌸 Bloom Meadow</h1>
-  <p>Welcome back, Tami 🌿</p>
+      <header className="header">
 
-  <button onClick={logout}>
-    Log Out
-  </button>
-</header>
+        <h1>🌸 Bloom Meadow</h1>
+
+        <p>
+          Welcome back, Tami 🌿
+        </p>
+
+        <button onClick={logout}>
+          Log Out
+        </button>
+
+      </header>
+
+
+
       <section className="cards">
+
 
         <div className="card">
           <h2>💙 Checking</h2>
-          <p>${currentChecking}</p>
+          <p>
+            ${currentChecking}
+          </p>
         </div>
 
 
         <div className="card">
           <h2>🌱 Emergency Savings</h2>
-          <p>${currentSavings}</p>
+          <p>
+            ${currentSavings}
+          </p>
         </div>
 
 
@@ -175,26 +201,33 @@ async function logout() {
           </p>
         </div>
 
+
       </section>
 
 
+
       <nav className="nav">
+
 
         <button>
           🌱 Home
         </button>
 
+
         <button onClick={() => setPage("expenses")}>
           💸 Expenses
         </button>
+
 
         <button>
           📅 Bills
         </button>
 
+
         <button>
           🌸 Goals
         </button>
+
 
       </nav>
 
