@@ -6,7 +6,8 @@ function Expenses({ user }) {
   const [amount, setAmount] = useState("");
   const [category, setCategory] = useState("Food");
   const [note, setNote] = useState("");
-
+  const [paymentAccount, setPaymentAccount] = useState("Checking");
+  
   useEffect(() => {
     loadExpenses();
   }, []);
@@ -29,13 +30,14 @@ async function addExpense() {
   const { error } = await supabase
     .from("expenses")
     .insert([
-      {
-        user_id: user.id,
-        amount: Number(amount),
-        category,
-        note,
-        date: new Date().toISOString().split("T")[0],
-      },
+     {
+  user_id: user.id,
+  amount: Number(amount),
+  category,
+  note,
+  payment_account: paymentAccount,
+  date: new Date().toISOString().split("T")[0],
+},
     ]);
 
   if (error) {
@@ -88,7 +90,13 @@ async function deleteExpense(id) {
         <option>Pets</option>
         <option>Other</option>
       </select>
-
+<select
+  value={paymentAccount}
+  onChange={(e) => setPaymentAccount(e.target.value)}
+>
+  <option>Checking</option>
+  <option>Savings</option>
+</select>
       <input
         placeholder="Note"
         value={note}
