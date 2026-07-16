@@ -1,3 +1,4 @@
+import Expenses from "./Expenses.jsx";
 import React, { useState, useEffect } from "react";
 import Login from "./Login.jsx";
 import { supabase } from "./supabaseClient";
@@ -6,7 +7,8 @@ import "./index.css";
 function App() {
   const [user, setUser] = useState(null);
   const [budget, setBudget] = useState(null);
-
+const [page, setPage] = useState("home");
+  
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
       setUser(data.session?.user || null);
@@ -62,7 +64,31 @@ function App() {
   if (!budget) {
     return <p>Loading Bloom Meadow 🌸</p>;
   }
+if (page === "expenses") {
+  return (
+    <div className="app">
+      <Expenses user={user} />
 
+      <nav className="nav">
+        <button onClick={() => setPage("home")}>
+          🌱 Home
+        </button>
+
+        <button onClick={() => setPage("expenses")}>
+          💸 Expenses
+        </button>
+
+        <button>
+          📅 Bills
+        </button>
+
+        <button>
+          🌸 Goals
+        </button>
+      </nav>
+    </div>
+  );
+}
   return (
     <div className="app">
       <header className="header">
@@ -98,7 +124,9 @@ function App() {
 
       <nav className="nav">
         <button>🌱 Home</button>
-        <button>💸 Expenses</button>
+        <button onClick={() => setPage("expenses")}>
+  💸 Expenses
+</button>
         <button>📅 Bills</button>
         <button>🌸 Goals</button>
       </nav>
