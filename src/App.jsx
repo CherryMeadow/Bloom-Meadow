@@ -46,7 +46,10 @@ function App() {
       setBudget(data);
     }
   }
-
+async function logout() {
+  await supabase.auth.signOut();
+  setUser(null);
+}
   async function loadExpenses() {
     const { data, error } = await supabase
       .from("expenses")
@@ -135,12 +138,14 @@ function App() {
   return (
     <div className="app">
 
-      <header className="header">
-        <h1>🌸 Bloom Meadow</h1>
-        <p>Welcome back, Tami 🌿</p>
-      </header>
+     <header className="header">
+  <h1>🌸 Bloom Meadow</h1>
+  <p>Welcome back, Tami 🌿</p>
 
-
+  <button onClick={logout}>
+    Log Out
+  </button>
+</header>
       <section className="cards">
 
         <div className="card">
