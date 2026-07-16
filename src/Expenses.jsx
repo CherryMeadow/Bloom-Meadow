@@ -50,6 +50,8 @@ async function addExpense() {
 }
 
 async function deleteExpense(id) {
+  console.log("Deleting expense:", id);
+
   const { error } = await supabase
     .from("expenses")
     .delete()
@@ -57,9 +59,11 @@ async function deleteExpense(id) {
 
   if (error) {
     alert(error.message);
+    console.log(error);
     return;
   }
 
+  console.log("Deleted successfully");
   loadExpenses();
 }
   return (
