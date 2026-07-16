@@ -54,10 +54,7 @@ async function addExpense() {
   setNote("");
   loadExpenses();
 }
-
 async function deleteExpense(id) {
-  console.log("Deleting expense:", id);
-
   const { error } = await supabase
     .from("expenses")
     .delete()
@@ -70,10 +67,11 @@ async function deleteExpense(id) {
   }
 
   // remove it from the screen immediately
-  setExpenses((currentExpenses) =>
-    currentExpenses.filter((expense) => expense.id !== id)
+  setExpenses((current) =>
+    current.filter((expense) => expense.id !== id)
   );
 }
+
   return (
     <div className="section">
       <h2>💸 Expenses</h2>
