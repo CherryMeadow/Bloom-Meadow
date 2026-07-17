@@ -124,8 +124,10 @@ function App() {
     return (
       <div className="app">
 
-        <Expenses user={user} />
-
+        <Expenses 
+  user={user} 
+  onExpenseAdded={loadExpenses}
+/>
         <nav className="nav">
 
           <button onClick={() => setPage("home")}>
