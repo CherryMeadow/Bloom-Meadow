@@ -4,9 +4,12 @@ import { supabase } from "./supabaseClient";
 function Expenses({ user }) {
   const [expenses, setExpenses] = useState([]);
   const [amount, setAmount] = useState("");
-  const [category, setCategory] = useState("Food");
+  const [category, setCategory] = useState("🍔 Food");
   const [note, setNote] = useState("");
   const [paymentAccount, setPaymentAccount] = useState("Checking");
+  const [date, setDate] = useState(
+    new Date().toISOString().split("T")[0]
+  );
 
   useEffect(() => {
     if (user) {
@@ -14,12 +17,14 @@ function Expenses({ user }) {
     }
   }, [user]);
 
+
   async function loadExpenses() {
     const { data, error } = await supabase
       .from("expenses")
       .select("*")
       .eq("user_id", user.id)
       .order("created_at", { ascending: false });
+
 
     if (error) {
       console.log(error);
@@ -29,7 +34,15 @@ function Expenses({ user }) {
     setExpenses(data || []);
   }
 
+
   async function addExpense() {
+
+    if (!amount || Number(amount) <= 0) {
+      alert("Please enter a valid amount.");
+      return;
+    }
+
+
     const { error } = await supabase
       .from("expenses")
       .insert([
@@ -39,9 +52,10 @@ function Expenses({ user }) {
           category,
           note,
           payment_account: paymentAccount,
-          date: new Date().toISOString().split("T")[0],
+          date,
         },
       ]);
+
 
     if (error) {
       alert(error.message);
@@ -49,105 +63,221 @@ function Expenses({ user }) {
       return;
     }
 
+
     setAmount("");
     setNote("");
+    setCategory("🍔 Food");
+    setPaymentAccount("Checking");
+    setDate(new Date().toISOString().split("T")[0]);
 
     await loadExpenses();
   }
 
+
+
   async function deleteExpense(id) {
+
     const { error } = await supabase
       .from("expenses")
       .delete()
       .eq("id", id);
 
+
     if (error) {
       alert(error.message);
       console.log(error);
       return;
     }
 
+
     await loadExpenses();
   }
+
+
+
+  const totalSpent = expenses.reduce(
+    (total, expense) =>
+      total + Number(expense.amount),
+    0
+  );
+
+
 
   return (
     <div className="section">
 
-      <h2>💸 Expenses</h2>
-
-      <input
-        placeholder="Amount"
-        value={amount}
-        onChange={(e) => setAmount(e.target.value)}
-      />
-
-      <select
-        value={category}
-        onChange={(e) => setCategory(e.target.value)}
-      >
-        <option>Food</option>
-        <option>Uber</option>
-        <option>Shopping</option>
-        <option>Pets</option>
-        <option>Other</option>
-      </select>
+      <h1>
+        💸 Expenses
+      </h1>
 
 
-      <select
-        value={paymentAccount}
-        onChange={(e) => setPaymentAccount(e.target.value)}
-      >
-        <option>Checking</option>
-        <option>Savings</option>
-      </select>
+      <div className="card">
+
+        <h2>
+          This Month
+        </h2>
+
+        <h1>
+          ${totalSpent.toFixed(2)}
+        </h1>
+
+      </div>
 
 
-      <input
-        placeholder="Note"
-        value={note}
-        onChange={(e) => setNote(e.target.value)}
-      />
+
+      <div className="card">
 
 
-      <button onClick={addExpense}>
-        Add Expense 🌱
-      </button>
+        <input
+          type="number"
+          placeholder="Amount"
+          value={amount}
+          onChange={(e) =>
+            setAmount(e.target.value)
+          }
+        />
 
 
-      <h3>Recent Expenses</h3>
+
+        <select
+          value={category}
+          onChange={(e) =>
+            setCategory(e.target.value)
+          }
+        >
+          <option>🍔 Food</option>
+          <option>🚗 Transportation</option>
+          <option>🛒 Groceries</option>
+          <option>🛍 Shopping</option>
+          <option>🏠 Bills</option>
+          <option>💳 Credit Card</option>
+          <option>🚢 Cruise</option>
+          <option>✈️ Travel</option>
+          <option>🐶 Pets</option>
+          <option>🎓 School</option>
+          <option>💊 Healthcare</option>
+          <option>🎁 Gifts</option>
+          <option>📦 Subscriptions</option>
+          <option>✨ Other</option>
+        </select>
 
 
-      {expenses.map((expense) => (
-        <div className="card" key={expense.id}>
 
+        <select
+          value={paymentAccount}
+          onChange={(e) =>
+            setPaymentAccount(e.target.value)
+          }
+        >
+          <option>Checking</option>
+          <option>Savings</option>
+        </select>
+
+
+
+        <input
+          type="date"
+          value={date}
+          onChange={(e) =>
+            setDate(e.target.value)
+          }
+        />
+
+
+
+        <input
+          placeholder="What was this for?"
+          value={note}
+          onChange={(e) =>
+            setNote(e.target.value)
+          }
+        />
+
+
+
+        <button onClick={addExpense}>
+          Add Expense 🌱
+        </button>
+
+
+      </div>
+
+
+
+
+      <h2>
+        Recent Expenses
+      </h2>
+
+
+
+      {expenses.length === 0 ? (
+
+        <div className="card">
           <p>
-            ${expense.amount} — {expense.category}
+            No expenses yet 🌸
           </p>
-
-         <small>
-  {expense.note}
-  <br />
-  📅 {expense.date}
-  <br />
-  💳 Paid from: {expense.payment_account}
-</small>
-          <p>
-            Paid from: {expense.payment_account}
-          </p>
-
-
-          <button
-            onClick={() => {
-              if (window.confirm("Delete this expense?")) {
-                deleteExpense(expense.id);
-              }
-            }}
-          >
-            🗑️ Delete
-          </button>
-
         </div>
-      ))}
+
+      ) : (
+
+        expenses.map((expense) => (
+
+          <div className="card" key={expense.id}>
+
+            <h2>
+              ${Number(expense.amount).toFixed(2)}
+            </h2>
+
+
+            <p>
+              {expense.category}
+            </p>
+
+
+            <p>
+              {expense.note || "No note added"}
+            </p>
+
+
+            <small>
+              📅 {expense.date}
+            </small>
+
+
+            <br />
+
+
+            <small>
+              💳 Paid from: {expense.payment_account}
+            </small>
+
+
+
+            <br />
+
+
+            <button
+              onClick={() => {
+                if (
+                  window.confirm(
+                    "Delete this expense?"
+                  )
+                ) {
+                  deleteExpense(expense.id);
+                }
+              }}
+            >
+              🗑️ Delete
+            </button>
+
+
+          </div>
+
+        ))
+
+      )}
+
 
     </div>
   );
