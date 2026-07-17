@@ -147,10 +147,25 @@ async function loadIncome() {
   }
 
 
-  if (!budget) {
-    return <p>Loading Bloom Meadow 🌸</p>;
-  }
+if (!budget) {
+  return (
+    <div className="loading-screen">
 
+      <div className="loading-card">
+
+        <h1>
+          🌸 Bloom Meadow
+        </h1>
+
+        <p>
+          Growing your budget 🌿
+        </p>
+
+      </div>
+
+    </div>
+  );
+}
 
   const checkingSpent = expenses
     .filter(
