@@ -520,7 +520,10 @@ if (page === "account") {
   return (
     <div className="app">
 
-      <Account user={user} />
+    <Account 
+  user={user} 
+  onProfileUpdate={loadProfile}
+/>
 
       <nav className="nav">
         <button onClick={() => setPage("home")}>
