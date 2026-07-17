@@ -11,7 +11,8 @@ function App() {
   const [budget, setBudget] = useState(null);
   const [expenses, setExpenses] = useState([]);
   const [page, setPage] = useState("home");
-
+const [income, setIncome] = useState([]);
+  
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
       setUser(data.session?.user || null);
@@ -28,13 +29,29 @@ function App() {
 
 
   useEffect(() => {
-    if (user) {
-      loadBudget();
-      loadExpenses();
-    }
+if (user) {
+  loadBudget();
+  loadExpenses();
+
+  loadIncome().then((data) => {
+    setIncome(data);
+  });
+}
   }, [user]);
 
+async function loadIncome() {
+  const { data, error } = await supabase
+    .from("income")
+    .select("*")
+    .eq("user_id", user.id);
 
+  if (error) {
+    console.log(error);
+    return;
+  }
+
+  return data || [];
+}
   async function loadBudget() {
     const { data, error } = await supabase
       .from("budget_data")
@@ -119,7 +136,26 @@ function App() {
   const currentSavings =
     Number(budget.savings) - savingsSpent;
 
+const weeklyIncome = income.reduce(
+  (total, job) =>
+    total +
+    Number(job.hourly_rate) *
+    Number(job.hours_per_week),
+  0
+);
 
+const monthlyIncome = weeklyIncome * 4.33;
+
+const monthlyExpenses = expenses.reduce(
+  (total, expense) =>
+    total + Number(expense.amount),
+  0
+);
+
+const availableMoney =
+  monthlyIncome - monthlyExpenses;
+
+  
 if (page === "income") {
   return (
     <div className="app">
@@ -214,7 +250,22 @@ if (page === "income") {
 
       <section className="cards">
 
+     <div className="card">
+        <h2>💰 Monthly Income</h2>
+       <p>
+          ${monthlyIncome.toFixed(2)}
+       </p>
+     </div>
 
+
+      <div className="card">
+        <h2>🌿 Available After Expenses</h2>
+        <p>
+          ${availableMoney.toFixed(2)}
+        </p>
+     </div>
+
+        
         <div className="card">
           <h2>💙 Checking</h2>
           <p>
