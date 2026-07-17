@@ -361,6 +361,38 @@ if (page === "income") {
         </p>
      </div>
 
+        <div className="card">
+  <h2>📅 Upcoming Bills</h2>
+
+  {upcomingBills.length === 0 ? (
+
+    <p>
+      No upcoming bills 🌸
+    </p>
+
+  ) : (
+
+    upcomingBills.map((bill) => (
+
+      <div key={bill.id}>
+
+        <p>
+          {bill.bill_name}
+        </p>
+
+        <small>
+          ${Number(bill.amount).toFixed(2)}
+          <br />
+          Due: {bill.due_date}
+        </small>
+
+      </div>
+
+    ))
+
+  )}
+
+</div>
         
         <div className="card">
           <h2>💙 Checking</h2>
