@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { supabase } from "./supabaseClient";
 
-function Expenses({ user }) {
+function Expenses({ user, onExpenseAdded }) {
   const [expenses, setExpenses] = useState([]);
   const [amount, setAmount] = useState("");
   const [category, setCategory] = useState("🍔 Food");
@@ -70,9 +70,11 @@ function Expenses({ user }) {
     setPaymentAccount("Checking");
     setDate(new Date().toISOString().split("T")[0]);
 
-    await loadExpenses();
-  }
+  await loadExpenses();
 
+if (onExpenseAdded) {
+  onExpenseAdded();
+}
 
 
   async function deleteExpense(id) {
