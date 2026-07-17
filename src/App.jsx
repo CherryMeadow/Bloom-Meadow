@@ -4,6 +4,7 @@ import Login from "./Login.jsx";
 import Expenses from "./Expenses.jsx";
 import Income from "./Income.jsx";
 import Cruise from "./Cruise.jsx";
+import Bills from "./Bills.jsx";
 import { supabase } from "./supabaseClient";
 import "./index.css";
 
@@ -155,7 +156,41 @@ const monthlyExpenses = expenses.reduce(
 
 const availableMoney =
   monthlyIncome - monthlyExpenses;
+if (page === "bills") {
+  return (
+    <div className="app">
 
+      <Bills user={user} />
+
+      <nav className="nav">
+
+        <button onClick={() => setPage("home")}>
+          🌱 Home
+        </button>
+
+        <button onClick={() => setPage("expenses")}>
+          💸 Expenses
+        </button>
+
+        <button onClick={() => setPage("income")}>
+          💰 Income
+        </button>
+
+        <button onClick={() => setPage("cruise")}>
+          🚢 Cruise
+        </button>
+
+        <button onClick={() => setPage("bills")}>
+          📅 Bills
+        </button>
+
+      </nav>
+
+    </div>
+  );
+}
+
+  
 if (page === "cruise") {
   return (
     <div className="app">
@@ -203,9 +238,9 @@ if (page === "income") {
           💸 Expenses
         </button>
 
-        <button>
-          📅 Bills
-        </button>
+        <button onClick={() => setPage("bills")}>
+         📅 Bills
+       </button>
         
 <button onClick={() => setPage("income")}>
   💰 Income
