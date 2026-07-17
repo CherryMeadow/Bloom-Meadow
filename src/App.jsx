@@ -13,7 +13,8 @@ function App() {
   const [budget, setBudget] = useState(null);
   const [expenses, setExpenses] = useState([]);
   const [page, setPage] = useState("home");
-const [income, setIncome] = useState([]);
+  const [income, setIncome] = useState([]);
+  const [bills, setBills] = useState([]);
   
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
