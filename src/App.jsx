@@ -1,7 +1,8 @@
-import Income from "./Income.jsx";
+
 import React, { useState, useEffect } from "react";
 import Login from "./Login.jsx";
 import Expenses from "./Expenses.jsx";
+import Income from "./Income.jsx";
 import { supabase } from "./supabaseClient";
 import "./index.css";
 
@@ -274,7 +275,10 @@ if (page === "income") {
           💸 Expenses
         </button>
 
-
+        <button onClick={() => setPage("income")}>
+          💰 Income
+        </button>
+        
         <button>
           📅 Bills
         </button>
