@@ -3,16 +3,22 @@ import { supabase } from "./supabaseClient";
 
 function Account({ user }) {
 
-  const [email, setEmail] = useState(
-    user.email
-  );
+  const [email, setEmail] = useState(user.email);
+  const [loading, setLoading] = useState(false);
+
+
 
   async function updateEmail() {
+
+    setLoading(true);
 
     const { error } =
       await supabase.auth.updateUser({
         email,
       });
+
+
+    setLoading(false);
 
 
     if (error) {
@@ -22,10 +28,12 @@ function Account({ user }) {
 
 
     alert(
-      "Email update request sent 🌸"
+      "Email update request sent 🌸 Check your email to confirm."
     );
 
   }
+
+
 
 
 
@@ -37,7 +45,10 @@ function Account({ user }) {
       );
 
 
-    if (!password) return;
+    if (!password) {
+      return;
+    }
+
 
 
     const { error } =
@@ -46,10 +57,14 @@ function Account({ user }) {
       });
 
 
+
     if (error) {
+
       alert(error.message);
       return;
+
     }
+
 
 
     alert(
@@ -60,20 +75,40 @@ function Account({ user }) {
 
 
 
+
+
+  async function logout(){
+
+    await supabase.auth.signOut();
+
+  }
+
+
+
+
+
   return (
 
     <div className="section">
 
+
       <h1>
-        ⚙️ Account
+        ⚙️ Account Settings
       </h1>
+
+
 
 
       <div className="card">
 
         <h2>
-          Email
+          🌸 Email
         </h2>
+
+
+        <p>
+          Current email:
+        </p>
 
 
         <input
@@ -84,24 +119,62 @@ function Account({ user }) {
         />
 
 
-        <button onClick={updateEmail}>
-          Change Email
+
+        <button
+          onClick={updateEmail}
+          disabled={loading}
+        >
+
+          {loading
+          ? "Updating..."
+          : "Change Email"}
+
         </button>
 
 
       </div>
+
+
 
 
 
       <div className="card">
 
+        <h2>
+          🔐 Security
+        </h2>
+
+
         <button
           onClick={changePassword}
         >
-          Change Password 🔐
+          Change Password
         </button>
 
+
       </div>
+
+
+
+
+
+      <div className="card">
+
+        <h2>
+          🌿 Session
+        </h2>
+
+
+        <button
+          onClick={logout}
+        >
+          Log Out
+        </button>
+
+
+      </div>
+
+
 
 
     </div>
@@ -109,5 +182,6 @@ function Account({ user }) {
   );
 
 }
+
 
 export default Account;
