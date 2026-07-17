@@ -14,14 +14,14 @@ import "./index.css";
 function App() {
   const [user, setUser] = useState(null);
   const [budget, setBudget] = useState(null);
-  const [profile, setProfile] = useState(null);
   const [expenses, setExpenses] = useState([]);
   const [page, setPage] = useState("home");
   const [income, setIncome] = useState([]);
   const [bills, setBills] = useState([]);
   const [cruiseItems, setCruiseItems] = useState([]);
-
+  const [profile, setProfile] = useState(null);
   
+ 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
       setUser(data.session?.user || null);
