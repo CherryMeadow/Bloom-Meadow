@@ -468,10 +468,37 @@ if (page === "account") {
         <h2>🌿 Available After Expenses</h2>
         <p>
           ${availableMoney.toFixed(2)}
-        </p>
-     </div>
+        </p><section className="cards">
 
-        <div className="card">
+
+<div
+  className="card clickable"
+  onClick={() => setPage("income")}
+>
+  <h2>💰 Monthly Income</h2>
+  <p>
+    ${monthlyIncome.toFixed(2)}
+  </p>
+</div>
+
+
+
+<div
+  className="card clickable"
+  onClick={() => setPage("expenses")}
+>
+  <h2>🌿 Available After Expenses</h2>
+  <p>
+    ${availableMoney.toFixed(2)}
+  </p>
+</div>
+
+
+
+<div
+  className="card clickable"
+  onClick={() => setPage("bills")}
+>
   <h2>📅 Upcoming Bills</h2>
 
   {upcomingBills.length === 0 ? (
@@ -482,7 +509,7 @@ if (page === "account") {
 
   ) : (
 
-    upcomingBills.map((bill) => (
+    upcomingBills.map((bill)=>(
 
       <div key={bill.id}>
 
@@ -492,7 +519,7 @@ if (page === "account") {
 
         <small>
           ${Number(bill.amount).toFixed(2)}
-          <br />
+          <br/>
           Due: {bill.due_date}
         </small>
 
@@ -503,26 +530,42 @@ if (page === "account") {
   )}
 
 </div>
-        
-        <div className="card">
-          <h2>💙 Checking</h2>
-          <p>
-            ${currentChecking.toFixed(2)}
-          </p>
-        </div>
 
 
 
-        <div className="card">
-          <h2>🌿 Safe to Spend</h2>
-          <p>
-            ${currentChecking.toFixed(2)}
-          </p>
-        </div>
+<div
+  className="card clickable"
+  onClick={() => setPage("expenses")}
+>
+  <h2>💙 Checking</h2>
+
+  <p>
+    ${currentChecking.toFixed(2)}
+  </p>
+
+</div>
 
 
 
-   <div className="card">
+<div
+  className="card clickable"
+  onClick={() => setPage("expenses")}
+>
+  <h2>🌿 Safe to Spend</h2>
+
+  <p>
+    ${currentChecking.toFixed(2)}
+  </p>
+
+</div>
+
+
+
+
+<div
+  className="card clickable"
+  onClick={() => setPage("goals")}
+>
   <h2>🌱 Emergency Savings</h2>
 
   <p>
@@ -533,21 +576,31 @@ if (page === "account") {
 
 
 
-       <div className="card">
-  <h2>🚢 Cruise Fund</h2>
+
+<div
+  className="card clickable"
+  onClick={() => setPage("cruise")}
+>
+
+  <h2>
+    🚢 Cruise Fund
+  </h2>
 
   <p>
     ${cruisePaid.toFixed(2)} / ${cruiseTotal.toFixed(2)}
   </p>
 
   <div className="progress-bar">
+
     <div
       className="progress-fill"
       style={{
-        width: `${cruisePercentage}%`,
+        width:`${cruisePercentage}%`
       }}
     ></div>
+
   </div>
+
 
   <small>
     {cruisePercentage.toFixed(0)}% complete
@@ -555,71 +608,87 @@ if (page === "account") {
 
 </div>
 
+
+
+
+
 <div
-  className="card"
+  className="card clickable"
   onClick={() => setPage("credit")}
 >
 
-  <h2>
-    💳 Credit Card
-  </h2>
+<h2>
+💳 Credit Card
+</h2>
 
-  <p>
-    ${Number(budget.credit_card_balance).toFixed(2)}
-  </p>
+<p>
+${Number(budget.credit_card_balance).toFixed(2)}
+</p>
 
 </div>
 
-        <div
-  className="card"
+
+
+
+
+<div
+  className="card clickable"
   onClick={() => setPage("goals")}
 >
 
-  <h2>
-    🌸 Goals
-  </h2>
+<h2>
+🌸 Goals
+</h2>
 
-  <p>
-    Track your savings goals
-  </p>
+<p>
+Track your savings goals
+</p>
 
 </div>
 
-      </section>
+
+</section>
 
 
-
-      <nav className="nav">
-
-
-        <button>
-          🌱 Home
-        </button>
+     <nav className="nav">
 
 
-        <button onClick={() => setPage("expenses")}>
-          💸 Expenses
-        </button>
-
-        <button onClick={() => setPage("income")}>
-          💰 Income
-        </button>
-        
-        <button onClick={() => setPage("cruise")}>
-         🚢 Cruise
-        </button>
-        
-        <button onClick={() => setPage("bills")}>
-         📅 Bills
-        </button>
+<button onClick={() => setPage("home")}>
+🌱 Home
+</button>
 
 
-       <button onClick={() => setPage("goals")}>
-        🌸 Goals
-       </button>
+<button onClick={() => setPage("expenses")}>
+💸 Expenses
+</button>
 
-      </nav>
 
+<button onClick={() => setPage("income")}>
+💰 Income
+</button>
+
+
+<button onClick={() => setPage("cruise")}>
+🚢 Cruise
+</button>
+
+
+<button onClick={() => setPage("bills")}>
+📅 Bills
+</button>
+
+
+<button onClick={() => setPage("goals")}>
+🌸 Goals
+</button>
+
+
+<button onClick={() => setPage("account")}>
+⚙️ Account
+</button>
+
+
+</nav>
 
     </div>
   );
