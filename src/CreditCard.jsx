@@ -5,6 +5,7 @@ import { supabase } from "./supabaseClient";
 function CreditCard({ user }) {
 
   const [cards, setCards] = useState([]);
+  const [payments, setPayments] = useState([]);
 
   const [cardName, setCardName] = useState("");
   const [creditLimit, setCreditLimit] = useState("");
@@ -16,6 +17,7 @@ function CreditCard({ user }) {
   useEffect(() => {
     if (user) {
       loadCards();
+      loadPayments();
     }
   }, [user]);
 
@@ -42,13 +44,29 @@ function CreditCard({ user }) {
 
 
 
-  async function addCard() {
+  async function loadPayments() {
 
-    if (!cardName || !creditLimit || !balance) {
-      alert("Please fill out the card information.");
+    const { data, error } = await supabase
+      .from("credit_card_payments")
+      .select("*")
+      .eq("user_id", user.id)
+      .order("created_at", { ascending: false });
+
+
+    if (error) {
+      console.log(error);
       return;
     }
 
+
+    setPayments(data || []);
+
+  }
+
+
+
+
+  async function addCard() {
 
     const { error } = await supabase
       .from("credit_cards")
@@ -83,30 +101,70 @@ function CreditCard({ user }) {
 
 
 
-  async function deleteCard(id) {
+  async function makePayment(card) {
 
-    const { error } = await supabase
-      .from("credit_cards")
-      .delete()
-      .eq("id", id);
+    const amount = prompt(
+      "Payment amount?"
+    );
 
 
-    if (error) {
-      alert(error.message);
+    if (!amount) return;
+
+
+    const paymentAmount = Number(amount);
+
+
+    const { error: paymentError } =
+      await supabase
+      .from("credit_card_payments")
+      .insert([
+        {
+          user_id: user.id,
+          card_id: card.id,
+          amount: paymentAmount,
+          payment_date:
+            new Date()
+            .toISOString()
+            .split("T")[0],
+        },
+      ]);
+
+
+
+    if (paymentError) {
+      alert(paymentError.message);
       return;
     }
 
 
+
+    const newBalance =
+      Number(card.balance) - paymentAmount;
+
+
+
+    await supabase
+      .from("credit_cards")
+      .update({
+        balance:
+          newBalance < 0 ? 0 : newBalance,
+      })
+      .eq("id", card.id);
+
+
+
     loadCards();
+    loadPayments();
 
   }
+
+
 
 
 
   return (
 
     <div className="section">
-
 
       <h1>
         💳 Credit Cards
@@ -116,31 +174,30 @@ function CreditCard({ user }) {
 
       <div className="card">
 
-
         <input
           placeholder="Card name"
           value={cardName}
-          onChange={(e) =>
+          onChange={(e)=>
             setCardName(e.target.value)
           }
         />
 
 
         <input
-          type="number"
           placeholder="Credit limit"
+          type="number"
           value={creditLimit}
-          onChange={(e) =>
+          onChange={(e)=>
             setCreditLimit(e.target.value)
           }
         />
 
 
         <input
-          type="number"
           placeholder="Current balance"
+          type="number"
           value={balance}
-          onChange={(e) =>
+          onChange={(e)=>
             setBalance(e.target.value)
           }
         />
@@ -149,26 +206,25 @@ function CreditCard({ user }) {
         <input
           type="date"
           value={dueDate}
-          onChange={(e) =>
+          onChange={(e)=>
             setDueDate(e.target.value)
           }
         />
 
 
         <input
-          type="number"
           placeholder="Minimum payment"
+          type="number"
           value={minimumPayment}
-          onChange={(e) =>
+          onChange={(e)=>
             setMinimumPayment(e.target.value)
           }
         />
 
 
         <button onClick={addCard}>
-          Add Credit Card 💳
+          Add Card 💳
         </button>
-
 
       </div>
 
@@ -176,101 +232,73 @@ function CreditCard({ user }) {
 
 
 
-      {cards.map((card) => {
+      {cards.map((card)=>(
+
+        <div className="card" key={card.id}>
 
 
-        const available =
-          Number(card.credit_limit) -
-          Number(card.balance);
+          <h2>
+            💳 {card.card_name}
+          </h2>
 
 
-
-        const usage =
-          (Number(card.balance) /
-          Number(card.credit_limit)) * 100;
-
-
-
-        return (
-
-          <div className="card" key={card.id}>
+          <p>
+            Balance:
+            {" "}
+            ${Number(card.balance).toFixed(2)}
+          </p>
 
 
-            <h2>
-              💳 {card.card_name}
-            </h2>
+          <p>
+            Available:
+            {" "}
+            ${(Number(card.credit_limit) -
+            Number(card.balance)).toFixed(2)}
+          </p>
 
 
-            <p>
-              Balance:
-              {" "}
-              ${Number(card.balance).toFixed(2)}
-            </p>
+          <p>
+            Due:
+            {" "}
+            {card.due_date || "Not set"}
+          </p>
 
 
-            <p>
-              Available:
-              {" "}
-              ${available.toFixed(2)}
-            </p>
-
-
-            <p>
-              Limit:
-              {" "}
-              ${Number(card.credit_limit).toFixed(2)}
-            </p>
-
-
-            <p>
-              Due:
-              {" "}
-              {card.due_date || "No date"}
-            </p>
-
-
-            <p>
-              Minimum:
-              {" "}
-              ${Number(card.minimum_payment).toFixed(2)}
-            </p>
+          <button
+            onClick={() =>
+              makePayment(card)
+            }
+          >
+            💰 Make Payment
+          </button>
 
 
 
-            <div className="progress-bar">
-
-              <div
-                className="progress-fill"
-                style={{
-                  width: `${usage}%`,
-                }}
-              ></div>
-
-            </div>
+          <h3>
+            Payment History
+          </h3>
 
 
-            <small>
-              {usage.toFixed(0)}% used
-            </small>
+          {payments
+            .filter(
+              (payment)=>
+              payment.card_id === card.id
+            )
+            .map((payment)=>(
+
+              <p key={payment.id}>
+                -${Number(payment.amount).toFixed(2)}
+                {" "}
+                on {payment.payment_date}
+              </p>
+
+            ))}
 
 
-            <br />
 
+        </div>
 
-            <button
-              onClick={() =>
-                deleteCard(card.id)
-              }
-            >
-              🗑️ Delete
-            </button>
-
-
-          </div>
-
-        );
-
-      })}
+      ))}
 
 
 
