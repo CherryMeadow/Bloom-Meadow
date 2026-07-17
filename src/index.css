@@ -368,3 +368,54 @@ button:hover {
   }
 
 }
+.loading-screen {
+
+  min-height:100vh;
+
+  display:flex;
+
+  justify-content:center;
+
+  align-items:center;
+
+  background:
+  linear-gradient(
+    180deg,
+    #eaf4f2,
+    #f8fbff
+  );
+
+}
+
+
+
+.loading-card {
+
+  background:white;
+
+  padding:40px;
+
+  border-radius:30px;
+
+  text-align:center;
+
+  box-shadow:
+  0 15px 35px rgba(80,120,110,.15);
+
+}
+
+
+
+.loading-card h1 {
+
+  color:#426b63;
+
+}
+
+
+
+.loading-card p {
+
+  color:#6f9891;
+
+}
