@@ -201,9 +201,10 @@ const availableMoney =
   
 const cruisePaid = cruiseItems.reduce(
   (total, item) =>
-    total + Number(item.amount_paid),
+    total + Number(item.paid_amount),
   0
 );
+
 
 const cruiseTotal = cruiseItems.reduce(
   (total, item) =>
