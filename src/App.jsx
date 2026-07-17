@@ -521,7 +521,7 @@ if (page === "account") {
     <div className="app">
 
     <Account 
-  user={user} 
+      user={user} 
   onProfileUpdate={loadProfile}
 />
 
