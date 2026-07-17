@@ -2,104 +2,218 @@ import React, { useEffect, useState } from "react";
 import { supabase } from "./supabaseClient";
 
 function Cruise({ user }) {
+
   const [items, setItems] = useState([]);
+
   const [item, setItem] = useState("");
   const [totalAmount, setTotalAmount] = useState("");
   const [paidAmount, setPaidAmount] = useState("");
   const [dueDate, setDueDate] = useState("");
-  const [paymentMethod, setPaymentMethod] = useState("Checking");
+  const [paymentMethod, setPaymentMethod] = useState("Card");
+
+  const [editingItem, setEditingItem] = useState(null);
+
 
 
   useEffect(() => {
-    if (user) {
+    if(user){
       loadCruise();
     }
   }, [user]);
 
 
-  async function loadCruise() {
-    const { data, error } = await supabase
+
+  async function loadCruise(){
+
+    const {data,error} = await supabase
       .from("cruise")
       .select("*")
       .eq("user_id", user.id)
-      .order("created_at", { ascending: false });
+      .order("created_at",{ascending:false});
 
 
-    if (error) {
+    if(error){
       console.log(error);
       return;
     }
 
+
     setItems(data || []);
+
   }
 
 
 
-  async function addItem() {
 
-    if (!item || !totalAmount) {
-      alert("Please add an item and amount.");
+
+  async function saveItem(){
+
+    if(!item || !totalAmount){
+      alert("Please fill out the required fields.");
       return;
     }
 
 
-    const { error } = await supabase
-      .from("cruise")
-      .insert([
-        {
-          user_id: user.id,
-          item,
-          total_amount: Number(totalAmount),
-          paid_amount: Number(paidAmount || 0),
-          due_date: dueDate || null,
-          payment_method: paymentMethod,
-        },
-      ]);
+
+    const cruiseData = {
+
+      item,
+      total_amount:Number(totalAmount),
+      paid_amount:Number(paidAmount || 0),
+      due_date:dueDate,
+      payment_method:paymentMethod,
+
+    };
 
 
-    if (error) {
-      alert(error.message);
-      return;
+
+    if(editingItem){
+
+
+      const {error}=await supabase
+        .from("cruise")
+        .update(cruiseData)
+        .eq("id",editingItem.id);
+
+
+
+      if(error){
+        alert(error.message);
+        return;
+      }
+
+
+
+    } else {
+
+
+      const {error}=await supabase
+        .from("cruise")
+        .insert([
+          {
+            user_id:user.id,
+            ...cruiseData,
+          }
+        ]);
+
+
+
+      if(error){
+        alert(error.message);
+        return;
+      }
+
     }
 
+
+
+    clearForm();
+    loadCruise();
+
+  }
+
+
+
+
+
+  function editCruise(cruiseItem){
+
+    setEditingItem(cruiseItem);
+
+    setItem(cruiseItem.item);
+    setTotalAmount(cruiseItem.total_amount);
+    setPaidAmount(cruiseItem.paid_amount);
+    setDueDate(cruiseItem.due_date);
+    setPaymentMethod(cruiseItem.payment_method);
+
+  }
+
+
+
+
+
+  function clearForm(){
+
+    setEditingItem(null);
 
     setItem("");
     setTotalAmount("");
     setPaidAmount("");
     setDueDate("");
+    setPaymentMethod("Card");
 
-    await loadCruise();
   }
 
 
 
-  async function deleteItem(id) {
+
+
+  async function deleteItem(id){
+
+    if(!window.confirm("Delete this cruise item?")){
+      return;
+    }
+
 
     await supabase
       .from("cruise")
       .delete()
-      .eq("id", id);
+      .eq("id",id);
 
 
-    await loadCruise();
+    loadCruise();
+
   }
 
 
 
+
+
+  const total =
+    items.reduce(
+      (sum,i)=>
+      sum + Number(i.total_amount),
+      0
+    );
+
+
+  const paid =
+    items.reduce(
+      (sum,i)=>
+      sum + Number(i.paid_amount),
+      0
+    );
+
+
+  const remaining =
+    total - paid;
+
+
+  const progress =
+    total === 0
+    ? 0
+    : (paid / total) * 100;
+
+
+
+
   return (
+
     <div className="section">
 
+
       <h1>
-        🚢 Cruise Tracker
+        🚢 Cruise Fund
       </h1>
+
 
 
       <div className="card">
 
         <input
-          placeholder="Item (Excursion, Gratuities, Spending Money)"
+          placeholder="Item"
           value={item}
-          onChange={(e) =>
+          onChange={(e)=>
             setItem(e.target.value)
           }
         />
@@ -107,9 +221,9 @@ function Cruise({ user }) {
 
         <input
           type="number"
-          placeholder="Total Amount"
+          placeholder="Total amount"
           value={totalAmount}
-          onChange={(e) =>
+          onChange={(e)=>
             setTotalAmount(e.target.value)
           }
         />
@@ -117,9 +231,9 @@ function Cruise({ user }) {
 
         <input
           type="number"
-          placeholder="Amount Paid"
+          placeholder="Amount paid"
           value={paidAmount}
-          onChange={(e) =>
+          onChange={(e)=>
             setPaidAmount(e.target.value)
           }
         />
@@ -128,7 +242,7 @@ function Cruise({ user }) {
         <input
           type="date"
           value={dueDate}
-          onChange={(e) =>
+          onChange={(e)=>
             setDueDate(e.target.value)
           }
         />
@@ -136,77 +250,129 @@ function Cruise({ user }) {
 
         <select
           value={paymentMethod}
-          onChange={(e) =>
+          onChange={(e)=>
             setPaymentMethod(e.target.value)
           }
         >
-          <option>Checking</option>
+          <option>Card</option>
+          <option>Cash</option>
           <option>Klarna</option>
           <option>Affirm</option>
-          <option>Credit Card</option>
         </select>
 
 
-        <button onClick={addItem}>
-          Add Cruise Item 🚢
+
+        <button onClick={saveItem}>
+
+          {editingItem
+          ? "Save Changes ✏️"
+          : "Add Cruise Item 🚢"}
+
         </button>
+
 
       </div>
 
 
 
-      <h2>
-        Trip Expenses
-      </h2>
+
+      <div className="card">
+
+        <h2>
+          🚢 Cruise Summary
+        </h2>
+
+
+        <p>
+          Total:
+          ${total.toFixed(2)}
+        </p>
+
+
+        <p>
+          Paid:
+          ${paid.toFixed(2)}
+        </p>
+
+
+        <p>
+          Remaining:
+          ${remaining.toFixed(2)}
+        </p>
+
+
+        <p>
+          Progress:
+          {progress.toFixed(0)}%
+        </p>
+
+
+      </div>
 
 
 
-      {items.map((item) => {
-
-        const progress =
-          (item.paid_amount / item.total_amount) * 100;
 
 
-        return (
+      {items.map((cruiseItem)=>(
 
-          <div className="card" key={item.id}>
+        <div
+          className="card"
+          key={cruiseItem.id}
+        >
 
-            <h2>
-              {item.item}
-            </h2>
-
-
-            <p>
-              ${item.paid_amount} / ${item.total_amount}
-            </p>
+          <h2>
+            🚢 {cruiseItem.item}
+          </h2>
 
 
-            <p>
-              {Math.round(progress)}% paid
-            </p>
+          <p>
+            ${Number(cruiseItem.paid_amount).toFixed(2)}
+            /
+            ${Number(cruiseItem.total_amount).toFixed(2)}
+          </p>
 
 
-            <p>
-              💳 {item.payment_method}
-            </p>
+          <p>
+            💳 {cruiseItem.payment_method}
+          </p>
 
 
-            <button
-              onClick={() => deleteItem(item.id)}
-            >
-              🗑️ Delete
-            </button>
+          <p>
+            📅 {cruiseItem.due_date || "No due date"}
+          </p>
 
 
-          </div>
 
-        );
+          <button
+            onClick={()=>
+              editCruise(cruiseItem)
+            }
+          >
+            ✏️ Edit
+          </button>
 
-      })}
+
+
+          <button
+            onClick={()=>
+              deleteItem(cruiseItem.id)
+            }
+          >
+            🗑️ Delete
+          </button>
+
+
+        </div>
+
+      ))}
+
 
 
     </div>
+
   );
+
 }
+
 
 export default Cruise;
