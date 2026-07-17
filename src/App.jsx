@@ -403,7 +403,7 @@ if (page === "credit") {
   return (
     <div className="app">
 
-      <CreditCard budget={budget} />
+      <CreditCard user={user} />
 
       <nav className="nav">
         <button onClick={() => setPage("home")}>
