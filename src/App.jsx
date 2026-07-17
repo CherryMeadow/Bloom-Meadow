@@ -15,6 +15,8 @@ function App() {
   const [page, setPage] = useState("home");
   const [income, setIncome] = useState([]);
   const [bills, setBills] = useState([]);
+  const [cruiseItems, setCruiseItems] = useState([]);
+
   
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
@@ -44,6 +46,11 @@ function App() {
   loadBills().then((data) => {
     setBills(data);
   });
+     
+     loadCruiseItems().then((data) => {
+  setCruiseItems(data);
+});
+    
 }
   }, [user]);
 
@@ -67,6 +74,19 @@ async function loadIncome() {
     .select("*")
     .eq("user_id", user.id)
     .order("due_date", { ascending: true });
+
+  if (error) {
+    console.log(error);
+    return;
+  }
+
+  return data || [];
+}
+ async function loadCruiseItems() {
+  const { data, error } = await supabase
+    .from("cruise")
+    .select("*")
+    .eq("user_id", user.id);
 
   if (error) {
     console.log(error);
@@ -178,7 +198,19 @@ const monthlyExpenses = expenses.reduce(
 
 const availableMoney =
   monthlyIncome - monthlyExpenses;
+  
+const cruisePaid = cruiseItems.reduce(
+  (total, item) =>
+    total + Number(item.amount_paid),
+  0
+);
 
+const cruiseTotal = cruiseItems.reduce(
+  (total, item) =>
+    total + Number(item.total_amount),
+  0
+);
+  
   const upcomingBills = bills
   .filter((bill) => !bill.paid)
   .slice(0, 3);
@@ -422,10 +454,10 @@ if (page === "income") {
 
 
         <div className="card">
-          <h2>🚢 Cruise Fund</h2>
-          <p>
-            $0 / ${budget.cruise_goal}
-          </p>
+         <h2>🚢 Cruise Fund</h2>
+<p>
+  ${cruisePaid.toFixed(2)} / ${cruiseTotal.toFixed(2)}
+</p>
         </div>
 
 
