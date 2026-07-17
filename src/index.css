@@ -107,3 +107,11 @@ body {
   background: #8fb8a8;
   border-radius: 10px;
 }
+.clickable {
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.clickable:hover {
+  transform: translateY(-5px);
+}
