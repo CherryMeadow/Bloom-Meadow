@@ -356,10 +356,9 @@ if (page === "income") {
   🚢 Cruise
 </button>     
         
-        <button>
-          🌸 Goals
-        </button>
-
+    <button onClick={() => setPage("goals")}>
+  🌸 Goals
+</button>    
       </nav>
 
     </div>
