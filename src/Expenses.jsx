@@ -2,7 +2,9 @@ import React, { useEffect, useState } from "react";
 import { supabase } from "./supabaseClient";
 
 function Expenses({ user, onExpenseAdded }) {
+
   const [expenses, setExpenses] = useState([]);
+
   const [amount, setAmount] = useState("");
   const [category, setCategory] = useState("🍔 Food");
   const [note, setNote] = useState("");
@@ -11,6 +13,10 @@ function Expenses({ user, onExpenseAdded }) {
     new Date().toISOString().split("T")[0]
   );
 
+  const [editingExpense, setEditingExpense] = useState(null);
+
+
+
   useEffect(() => {
     if (user) {
       loadExpenses();
@@ -18,188 +24,212 @@ function Expenses({ user, onExpenseAdded }) {
   }, [user]);
 
 
+
   async function loadExpenses() {
+
     const { data, error } = await supabase
       .from("expenses")
       .select("*")
       .eq("user_id", user.id)
-      .order("created_at", { ascending: false });
+      .order("created_at", { ascending:false });
 
 
     if (error) {
       console.log(error);
       return;
     }
+
 
     setExpenses(data || []);
+
   }
 
 
-  async function addExpense() {
 
-    if (!amount || Number(amount) <= 0) {
-      alert("Please enter a valid amount.");
+
+
+  async function saveExpense() {
+
+    if (!amount) {
+      alert("Enter an amount.");
       return;
     }
 
 
-    const { error } = await supabase
-      .from("expenses")
-      .insert([
-        {
-          user_id: user.id,
-          amount: Number(amount),
-          category,
-          note,
-          payment_account: paymentAccount,
-          date,
-        },
-      ]);
+
+    const expenseData = {
+
+      amount: Number(amount),
+      category,
+      note,
+      payment_account: paymentAccount,
+      date,
+
+    };
 
 
-    if (error) {
-      alert(error.message);
-      console.log(error);
-      return;
+
+    if (editingExpense) {
+
+
+      await supabase
+        .from("expenses")
+        .update(expenseData)
+        .eq("id", editingExpense.id);
+
+
+
+    } else {
+
+
+      await supabase
+        .from("expenses")
+        .insert([
+          {
+            user_id:user.id,
+            ...expenseData,
+          },
+        ]);
+
     }
 
 
+
+    clearForm();
+
+    loadExpenses();
+
+    if(onExpenseAdded){
+      onExpenseAdded();
+    }
+
+  }
+
+
+
+
+
+  function editExpense(expense){
+
+    setEditingExpense(expense);
+
+    setAmount(expense.amount);
+    setCategory(expense.category);
+    setNote(expense.note || "");
+    setPaymentAccount(expense.payment_account);
+    setDate(expense.date);
+
+  }
+
+
+
+
+  function clearForm(){
+
+    setEditingExpense(null);
     setAmount("");
-    setNote("");
     setCategory("🍔 Food");
+    setNote("");
     setPaymentAccount("Checking");
-    setDate(new Date().toISOString().split("T")[0]);
+    setDate(
+      new Date().toISOString().split("T")[0]
+    );
 
-  await loadExpenses();
-
-if (onExpenseAdded) {
-  onExpenseAdded();
-}
   }
-  
-  async function deleteExpense(id) {
 
-    const { error } = await supabase
+
+
+
+
+  async function deleteExpense(id){
+
+    await supabase
       .from("expenses")
       .delete()
-      .eq("id", id);
+      .eq("id",id);
 
 
-    if (error) {
-      alert(error.message);
-      console.log(error);
-      return;
-    }
+    loadExpenses();
 
-
-    await loadExpenses();
   }
 
-
-
-  const totalSpent = expenses.reduce(
-    (total, expense) =>
-      total + Number(expense.amount),
-    0
-  );
 
 
 
   return (
+
     <div className="section">
+
 
       <h1>
         💸 Expenses
       </h1>
 
 
-      <div className="card">
-
-        <h2>
-          This Month
-        </h2>
-
-        <h1>
-          ${totalSpent.toFixed(2)}
-        </h1>
-
-      </div>
-
-
 
       <div className="card">
 
 
         <input
-          type="number"
           placeholder="Amount"
           value={amount}
-          onChange={(e) =>
-            setAmount(e.target.value)
-          }
+          onChange={(e)=>setAmount(e.target.value)}
         />
 
 
 
         <select
           value={category}
-          onChange={(e) =>
-            setCategory(e.target.value)
-          }
+          onChange={(e)=>setCategory(e.target.value)}
         >
+
           <option>🍔 Food</option>
-          <option>🚗 Transportation</option>
-          <option>🛒 Groceries</option>
-          <option>🛍 Shopping</option>
+          <option>🚗 Uber</option>
+          <option>🛍️ Shopping</option>
+          <option>🐾 Pets</option>
           <option>🏠 Bills</option>
-          <option>💳 Credit Card</option>
-          <option>🚢 Cruise</option>
-          <option>✈️ Travel</option>
-          <option>🐶 Pets</option>
-          <option>🎓 School</option>
-          <option>💊 Healthcare</option>
-          <option>🎁 Gifts</option>
-          <option>📦 Subscriptions</option>
-          <option>✨ Other</option>
+          <option>Other</option>
+
         </select>
+
 
 
 
         <select
           value={paymentAccount}
-          onChange={(e) =>
-            setPaymentAccount(e.target.value)
-          }
+          onChange={(e)=>setPaymentAccount(e.target.value)}
         >
+
           <option>Checking</option>
           <option>Savings</option>
+
         </select>
+
 
 
 
         <input
           type="date"
           value={date}
-          onChange={(e) =>
-            setDate(e.target.value)
-          }
+          onChange={(e)=>setDate(e.target.value)}
         />
 
 
 
         <input
-          placeholder="What was this for?"
+          placeholder="Note"
           value={note}
-          onChange={(e) =>
-            setNote(e.target.value)
-          }
+          onChange={(e)=>setNote(e.target.value)}
         />
 
 
 
-        <button onClick={addExpense}>
-          Add Expense 🌱
+        <button onClick={saveExpense}>
+          {editingExpense
+            ? "Save Changes ✏️"
+            : "Add Expense 🌱"}
         </button>
+
 
 
       </div>
@@ -213,76 +243,70 @@ if (onExpenseAdded) {
 
 
 
-      {expenses.length === 0 ? (
+      {expenses.map((expense)=>(
 
-        <div className="card">
+        <div
+          className="card"
+          key={expense.id}
+        >
+
+
+          <h2>
+            ${Number(expense.amount).toFixed(2)}
+          </h2>
+
+
           <p>
-            No expenses yet 🌸
+            {expense.category}
           </p>
+
+
+          <p>
+            {expense.note || "No note"}
+          </p>
+
+
+          <small>
+            📅 {expense.date}
+            <br/>
+            💳 {expense.payment_account}
+          </small>
+
+
+
+          <br/>
+
+
+          <button
+            onClick={() =>
+              editExpense(expense)
+            }
+          >
+            ✏️ Edit
+          </button>
+
+
+
+          <button
+            onClick={() =>
+              deleteExpense(expense.id)
+            }
+          >
+            🗑️ Delete
+          </button>
+
+
         </div>
 
-      ) : (
+      ))}
 
-        expenses.map((expense) => (
-
-          <div className="card" key={expense.id}>
-
-            <h2>
-              ${Number(expense.amount).toFixed(2)}
-            </h2>
-
-
-            <p>
-              {expense.category}
-            </p>
-
-
-            <p>
-              {expense.note || "No note added"}
-            </p>
-
-
-            <small>
-              📅 {expense.date}
-            </small>
-
-
-            <br />
-
-
-            <small>
-              💳 Paid from: {expense.payment_account}
-            </small>
-
-
-
-            <br />
-
-
-            <button
-              onClick={() => {
-                if (
-                  window.confirm(
-                    "Delete this expense?"
-                  )
-                ) {
-                  deleteExpense(expense.id);
-                }
-              }}
-            >
-              🗑️ Delete
-            </button>
-
-
-          </div>
-
-        ))
-
-      )}
 
 
     </div>
+
   );
+
 }
+
 
 export default Expenses;
