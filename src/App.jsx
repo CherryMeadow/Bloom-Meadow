@@ -543,7 +543,7 @@ if (page === "account") {
         </h1>
 
         <p>
-          Welcome back, Tami 🌿
+          Welcome back, {profile?.display_name || "there"} 🌿
         </p>
 
 
