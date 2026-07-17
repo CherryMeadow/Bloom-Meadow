@@ -72,10 +72,16 @@ function Expenses({ user, onExpenseAdded }) {
     if (editingExpense) {
 
 
-      await supabase
-        .from("expenses")
-        .update(expenseData)
-        .eq("id", editingExpense.id);
+     const { error } = await supabase
+  .from("expenses")
+  .update(expenseData)
+  .eq("id", editingExpense.id);
+
+if (error) {
+  alert(error.message);
+  console.log(error);
+  return;
+}
 
 
 
