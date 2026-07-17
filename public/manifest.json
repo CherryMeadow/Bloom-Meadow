@@ -1,0 +1,16 @@
+{
+  "name": "Bloom Meadow",
+  "short_name": "Bloom",
+  "description": "A personal budgeting and savings app",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#eaf4f2",
+  "theme_color": "#8fbfae",
+  "icons": [
+    {
+      "src": "/bloom-logo.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
