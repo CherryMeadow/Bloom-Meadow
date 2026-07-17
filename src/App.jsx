@@ -39,7 +39,50 @@ function App() {
   useEffect(() => {
 
    if (user) {
-  loadBudget();
+async function loadBudget() {
+
+  const { data, error } = await supabase
+    .from("budget_data")
+    .select("*")
+    .eq("user_id", user.id)
+    .maybeSingle();
+
+  if (error) {
+    console.log(error);
+    return;
+  }
+
+  if (!data) {
+
+    const { data: newBudget, error: insertError } =
+      await supabase
+        .from("budget_data")
+        .insert([
+          {
+            user_id: user.id,
+            checking: 0,
+            savings: 0,
+            cruise_goal: 0,
+            credit_card_balance: 0,
+          },
+        ])
+        .select()
+        .single();
+
+    if (insertError) {
+      console.log(insertError);
+      return;
+    }
+
+    setBudget(newBudget);
+
+  } else {
+
+    setBudget(data);
+
+  }
+
+}
   loadExpenses();
 
   loadIncome().then((data) => {
