@@ -35,7 +35,29 @@ function Account({ user }) {
   }
 
 
+async function updateName() {
 
+  setLoading(true);
+
+  const { error } = await supabase
+    .from("profiles")
+    .update({
+      display_name: name
+    })
+    .eq("user_id", user.id);
+
+
+  if (error) {
+    alert(error.message);
+    setLoading(false);
+    return;
+  }
+
+
+  alert("Name updated 🌸");
+  setLoading(false);
+
+}
 
 
   async function changePassword() {
@@ -75,25 +97,6 @@ function Account({ user }) {
   }
 
 
-async function updateName() {
-
-  const { error } = await supabase
-    .from("profiles")
-    .update({
-      display_name: name
-    })
-    .eq("user_id", user.id);
-
-
-  if (error) {
-    alert(error.message);
-    return;
-  }
-
-
-  alert("Name updated 🌸");
-
-}
 
 
   async function logout(){
