@@ -6,6 +6,8 @@ import Income from "./Income.jsx";
 import Cruise from "./Cruise.jsx";
 import Bills from "./Bills.jsx";
 import Goals from "./Goals.jsx";
+import CreditCard from "./CreditCard.jsx";
+import Account from "./Account.jsx";
 import { supabase } from "./supabaseClient";
 import "./index.css";
 
@@ -397,6 +399,38 @@ if (page === "income") {
   }
 
 
+if (page === "credit") {
+  return (
+    <div className="app">
+
+      <CreditCard budget={budget} />
+
+      <nav className="nav">
+        <button onClick={() => setPage("home")}>
+          🌱 Home
+        </button>
+      </nav>
+
+    </div>
+  );
+}
+
+
+if (page === "account") {
+  return (
+    <div className="app">
+
+      <Account user={user} />
+
+      <nav className="nav">
+        <button onClick={() => setPage("home")}>
+          🌱 Home
+        </button>
+      </nav>
+
+    </div>
+  );
+}
 
   return (
     <div className="app">
@@ -489,8 +523,10 @@ if (page === "income") {
 
 
 
-        <div className="card">
-          <h2>🌱 Emergency Savings</h2>
+       <div 
+  className="card"
+  onClick={() => setPage("goals")}
+>
           <p>
             ${currentSavings.toFixed(2)}
           </p>
@@ -521,8 +557,10 @@ if (page === "income") {
 </div>
 
 
-        <div className="card">
-          <h2>💳 Credit Card</h2>
+       <div 
+  className="card"
+  onClick={() => setPage("credit")}
+>
           <p>
             ${Number(budget.credit_card_balance).toFixed(2)}
           </p>
