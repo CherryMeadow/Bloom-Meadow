@@ -37,68 +37,31 @@ function App() {
   }, []);
 
 
-  useEffect(() => {
+ useEffect(() => {
 
-   if (user) {
-async function loadBudget() {
+  if (user) {
 
-  const { data, error } = await supabase
-    .from("budget_data")
-    .select("*")
-    .eq("user_id", user.id)
-    .maybeSingle();
+    loadBudget();
+    loadExpenses();
+    loadProfile();
 
-  if (error) {
-    console.log(error);
-    return;
-  }
+    loadIncome().then((data) => {
+      setIncome(data);
+    });
 
-  if (!data) {
+    loadBills().then((data) => {
+      setBills(data);
+    });
 
-    const { data: newBudget, error: insertError } =
-      await supabase
-        .from("budget_data")
-        .insert([
-          {
-            user_id: user.id,
-            checking: 0,
-            savings: 0,
-            credit_card_balance: 0,
-          },
-        ])
-        .select()
-        .single();
-
-    if (insertError) {
-      console.log(insertError);
-      return;
-    }
-
-    setBudget(newBudget);
-
-  } else {
-
-    setBudget(data);
+    loadCruiseItems().then((data) => {
+      setCruiseItems(data);
+    });
 
   }
 
-}
-  loadExpenses();
+}, [user]);
 
-  loadIncome().then((data) => {
-    setIncome(data);
-  });
-
-  loadBills().then((data) => {
-    setBills(data);
-  });
-     
-     loadCruiseItems().then((data) => {
-  setCruiseItems(data);
-});
-    
-}
-  }, [user]);
+ 
 
 async function loadIncome() {
   const { data, error } = await supabase
@@ -142,20 +105,54 @@ async function loadIncome() {
   return data || [];
 }
   
-  async function loadBudget() {
-    const { data, error } = await supabase
-      .from("budget_data")
-      .select("*")
-      .eq("user_id", user.id)
-      .single();
+async function loadBudget() {
 
-    if (error) {
-      console.log(error);
+  const { data, error } = await supabase
+    .from("budget_data")
+    .select("*")
+    .eq("user_id", user.id)
+    .maybeSingle();
+
+
+  if (error) {
+    console.log(error);
+    return;
+  }
+
+
+  if (!data) {
+
+    const { data: newBudget, error: insertError } =
+      await supabase
+        .from("budget_data")
+        .insert([
+          {
+            user_id: user.id,
+            checking: 0,
+            savings: 0,
+            credit_card_balance: 0,
+          },
+        ])
+        .select()
+        .single();
+
+
+    if (insertError) {
+      console.log(insertError);
       return;
     }
 
+
+    setBudget(newBudget);
+
+
+  } else {
+
     setBudget(data);
+
   }
+
+}
 
 
   async function loadExpenses() {
