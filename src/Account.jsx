@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { supabase } from "./supabaseClient";
 
-function Account({ user }) {
+function Account({ user, onProfileUpdate }) {
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState(user.email);
@@ -82,9 +82,13 @@ async function updateName() {
   }
  
 
-  alert("Name updated 🌸");
-  setLoading(false);
+alert("Name updated 🌸");
 
+if (onProfileUpdate) {
+  onProfileUpdate();
+}
+
+setLoading(false);
 }
 
 
