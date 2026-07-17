@@ -32,12 +32,17 @@ function App() {
 
 
   useEffect(() => {
-if (user) {
+
+   if (user) {
   loadBudget();
   loadExpenses();
 
   loadIncome().then((data) => {
     setIncome(data);
+  });
+
+  loadBills().then((data) => {
+    setBills(data);
   });
 }
   }, [user]);
@@ -55,6 +60,22 @@ async function loadIncome() {
 
   return data || [];
 }
+
+  async function loadBills() {
+  const { data, error } = await supabase
+    .from("bills")
+    .select("*")
+    .eq("user_id", user.id)
+    .order("due_date", { ascending: true });
+
+  if (error) {
+    console.log(error);
+    return;
+  }
+
+  return data || [];
+}
+  
   async function loadBudget() {
     const { data, error } = await supabase
       .from("budget_data")
@@ -157,6 +178,11 @@ const monthlyExpenses = expenses.reduce(
 
 const availableMoney =
   monthlyIncome - monthlyExpenses;
+
+  const upcomingBills = bills
+  .filter((bill) => !bill.paid)
+  .slice(0, 3);
+  
 if (page === "bills") {
   return (
     <div className="app">
