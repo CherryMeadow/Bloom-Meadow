@@ -5,6 +5,7 @@ import Expenses from "./Expenses.jsx";
 import Income from "./Income.jsx";
 import Cruise from "./Cruise.jsx";
 import Bills from "./Bills.jsx";
+import Goals from "./Goals.jsx";
 import { supabase } from "./supabaseClient";
 import "./index.css";
 
@@ -255,6 +256,44 @@ if (page === "bills") {
   );
 }
 
+  
+if (page === "goals") {
+  return (
+    <div className="app">
+
+      <Goals user={user} />
+
+      <nav className="nav">
+
+        <button onClick={() => setPage("home")}>
+          🌱 Home
+        </button>
+
+        <button onClick={() => setPage("expenses")}>
+          💸 Expenses
+        </button>
+
+        <button onClick={() => setPage("income")}>
+          💰 Income
+        </button>
+
+        <button onClick={() => setPage("cruise")}>
+          🚢 Cruise
+        </button>
+
+        <button onClick={() => setPage("bills")}>
+          📅 Bills
+        </button>
+
+        <button onClick={() => setPage("goals")}>
+          🌸 Goals
+        </button>
+
+      </nav>
+
+    </div>
+  );
+}
   
 if (page === "cruise") {
   return (
@@ -512,17 +551,16 @@ if (page === "income") {
         
         <button onClick={() => setPage("cruise")}>
          🚢 Cruise
-       </button>
+        </button>
         
         <button onClick={() => setPage("bills")}>
-  📅 Bills
-</button>
-
-
-        <button>
-          🌸 Goals
+         📅 Bills
         </button>
 
+
+       <button onClick={() => setPage("goals")}>
+        🌸 Goals
+       </button>
 
       </nav>
 
