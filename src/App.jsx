@@ -14,6 +14,7 @@ import "./index.css";
 function App() {
   const [user, setUser] = useState(null);
   const [budget, setBudget] = useState(null);
+  const [profile, setProfile] = useState(null);
   const [expenses, setExpenses] = useState([]);
   const [page, setPage] = useState("home");
   const [income, setIncome] = useState([]);
@@ -173,7 +174,53 @@ async function loadIncome() {
     setExpenses(data || []);
   }
 
+async function loadProfile() {
 
+  const { data, error } = await supabase
+    .from("profiles")
+    .select("*")
+    .eq("user_id", user.id)
+    .maybeSingle();
+
+
+  if (error) {
+    console.log(error);
+    return;
+  }
+
+
+  if (!data) {
+
+    const { data: newProfile, error: insertError } =
+      await supabase
+        .from("profiles")
+        .insert([
+          {
+            user_id: user.id,
+            display_name: "New User",
+            theme: "sage",
+            accent_color: "#8fbfae"
+          }
+        ])
+        .select()
+        .single();
+
+
+    if (insertError) {
+      console.log(insertError);
+      return;
+    }
+
+
+    setProfile(newProfile);
+
+  } else {
+
+    setProfile(data);
+
+  }
+
+}
   async function logout() {
     await supabase.auth.signOut();
     setUser(null);
