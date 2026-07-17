@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { supabase } from "./supabaseClient";
 
 function Account({ user }) {
@@ -8,7 +8,35 @@ function Account({ user }) {
   const [loading, setLoading] = useState(false);
 
 
+useEffect(() => {
 
+  async function loadProfile() {
+
+    const { data, error } = await supabase
+      .from("profiles")
+      .select("display_name")
+      .eq("user_id", user.id)
+      .single();
+
+
+    if (error) {
+      console.log(error);
+      return;
+    }
+
+
+    if (data) {
+      setName(data.display_name);
+    }
+
+  }
+
+
+  loadProfile();
+
+}, [user]);
+
+  
   async function updateEmail() {
 
     setLoading(true);
