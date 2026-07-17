@@ -365,6 +365,10 @@ if (page === "income") {
           💰 Income
         </button>
         
+        <button onClick={() => setPage("cruise")}>
+         🚢 Cruise
+       </button>
+        
         <button>
           📅 Bills
         </button>
