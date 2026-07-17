@@ -523,14 +523,14 @@ if (page === "account") {
 
 
 
-       <div 
-  className="card"
-  onClick={() => setPage("goals")}
->
-          <p>
-            ${currentSavings.toFixed(2)}
-          </p>
-        </div>
+   <div className="card">
+  <h2>🌱 Emergency Savings</h2>
+
+  <p>
+    ${currentSavings.toFixed(2)}
+  </p>
+
+</div>
 
 
 
@@ -556,16 +556,35 @@ if (page === "account") {
 
 </div>
 
-
-       <div 
+<div
   className="card"
   onClick={() => setPage("credit")}
 >
-          <p>
-            ${Number(budget.credit_card_balance).toFixed(2)}
-          </p>
-        </div>
 
+  <h2>
+    💳 Credit Card
+  </h2>
+
+  <p>
+    ${Number(budget.credit_card_balance).toFixed(2)}
+  </p>
+
+</div>
+
+        <div
+  className="card"
+  onClick={() => setPage("goals")}
+>
+
+  <h2>
+    🌸 Goals
+  </h2>
+
+  <p>
+    Track your savings goals
+  </p>
+
+</div>
 
       </section>
 
