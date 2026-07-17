@@ -7,6 +7,8 @@ function CreditCard({ user }) {
   const [cards, setCards] = useState([]);
   const [payments, setPayments] = useState([]);
 
+  const [editingCard, setEditingCard] = useState(null);
+
   const [cardName, setCardName] = useState("");
   const [creditLimit, setCreditLimit] = useState("");
   const [balance, setBalance] = useState("");
@@ -24,76 +26,72 @@ function CreditCard({ user }) {
 
 
   async function loadCards() {
-
-    const { data, error } = await supabase
+    const { data } = await supabase
       .from("credit_cards")
       .select("*")
-      .eq("user_id", user.id)
-      .order("created_at", { ascending: false });
-
-
-    if (error) {
-      console.log(error);
-      return;
-    }
-
+      .eq("user_id", user.id);
 
     setCards(data || []);
-
   }
 
 
 
   async function loadPayments() {
-
-    const { data, error } = await supabase
+    const { data } = await supabase
       .from("credit_card_payments")
       .select("*")
       .eq("user_id", user.id)
       .order("created_at", { ascending: false });
 
-
-    if (error) {
-      console.log(error);
-      return;
-    }
-
-
     setPayments(data || []);
-
   }
 
 
 
 
-  async function addCard() {
+  async function saveCard() {
 
-    const { error } = await supabase
-      .from("credit_cards")
-      .insert([
-        {
-          user_id: user.id,
-          card_name: cardName,
-          credit_limit: Number(creditLimit),
-          balance: Number(balance),
-          due_date: dueDate,
-          minimum_payment: Number(minimumPayment || 0),
-        },
-      ]);
-
-
-    if (error) {
-      alert(error.message);
+    if (!cardName || !creditLimit || !balance) {
+      alert("Fill out all card information.");
       return;
     }
 
 
-    setCardName("");
-    setCreditLimit("");
-    setBalance("");
-    setDueDate("");
-    setMinimumPayment("");
+    if (editingCard) {
 
+      await supabase
+        .from("credit_cards")
+        .update({
+          card_name: cardName,
+          credit_limit: Number(creditLimit),
+          balance: Number(balance),
+          due_date: dueDate,
+          minimum_payment:
+            Number(minimumPayment || 0),
+        })
+        .eq("id", editingCard.id);
+
+
+    } else {
+
+      await supabase
+        .from("credit_cards")
+        .insert([
+          {
+            user_id: user.id,
+            card_name: cardName,
+            credit_limit: Number(creditLimit),
+            balance: Number(balance),
+            due_date: dueDate,
+            minimum_payment:
+              Number(minimumPayment || 0),
+          },
+        ]);
+
+    }
+
+
+    clearForm();
     loadCards();
 
   }
@@ -101,7 +99,58 @@ function CreditCard({ user }) {
 
 
 
-  async function makePayment(card) {
+  function clearForm() {
+    setEditingCard(null);
+    setCardName("");
+    setCreditLimit("");
+    setBalance("");
+    setDueDate("");
+    setMinimumPayment("");
+  }
+
+
+
+
+
+  function editCard(card) {
+
+    setEditingCard(card);
+    setCardName(card.card_name);
+    setCreditLimit(card.credit_limit);
+    setBalance(card.balance);
+    setDueDate(card.due_date);
+    setMinimumPayment(card.minimum_payment);
+
+  }
+
+
+
+
+
+  async function deleteCard(card) {
+
+    await supabase
+      .from("credit_card_payments")
+      .delete()
+      .eq("card_id", card.id);
+
+
+    await supabase
+      .from("credit_cards")
+      .delete()
+      .eq("id", card.id);
+
+
+    loadCards();
+    loadPayments();
+
+  }
+
+
+
+
+
+  async function addPayment(card) {
 
     const amount = prompt(
       "Payment amount?"
@@ -111,17 +160,13 @@ function CreditCard({ user }) {
     if (!amount) return;
 
 
-    const paymentAmount = Number(amount);
-
-
-    const { error: paymentError } =
-      await supabase
+    await supabase
       .from("credit_card_payments")
       .insert([
         {
           user_id: user.id,
           card_id: card.id,
-          amount: paymentAmount,
+          amount: Number(amount),
           payment_date:
             new Date()
             .toISOString()
@@ -130,16 +175,50 @@ function CreditCard({ user }) {
       ]);
 
 
+    await supabase
+      .from("credit_cards")
+      .update({
+        balance:
+          Math.max(
+            0,
+            Number(card.balance) -
+            Number(amount)
+          ),
+      })
+      .eq("id", card.id);
 
-    if (paymentError) {
-      alert(paymentError.message);
-      return;
-    }
+
+    loadCards();
+    loadPayments();
+
+  }
 
 
 
-    const newBalance =
-      Number(card.balance) - paymentAmount;
+
+
+  async function editPayment(payment, card) {
+
+    const newAmount = prompt(
+      "New payment amount:",
+      payment.amount
+    );
+
+
+    if (!newAmount) return;
+
+
+    const difference =
+      Number(newAmount) -
+      Number(payment.amount);
+
+
+    await supabase
+      .from("credit_card_payments")
+      .update({
+        amount: Number(newAmount),
+      })
+      .eq("id", payment.id);
 
 
 
@@ -147,7 +226,37 @@ function CreditCard({ user }) {
       .from("credit_cards")
       .update({
         balance:
-          newBalance < 0 ? 0 : newBalance,
+          Number(card.balance) +
+          difference,
+      })
+      .eq("id", card.id);
+
+
+
+    loadCards();
+    loadPayments();
+
+  }
+
+
+
+
+
+  async function deletePayment(payment, card) {
+
+    await supabase
+      .from("credit_card_payments")
+      .delete()
+      .eq("id", payment.id);
+
+
+
+    await supabase
+      .from("credit_cards")
+      .update({
+        balance:
+          Number(card.balance) +
+          Number(payment.amount),
       })
       .eq("id", card.id);
 
@@ -171,64 +280,46 @@ function CreditCard({ user }) {
       </h1>
 
 
-
       <div className="card">
 
         <input
           placeholder="Card name"
           value={cardName}
-          onChange={(e)=>
-            setCardName(e.target.value)
-          }
+          onChange={(e)=>setCardName(e.target.value)}
         />
-
 
         <input
           placeholder="Credit limit"
           type="number"
           value={creditLimit}
-          onChange={(e)=>
-            setCreditLimit(e.target.value)
-          }
+          onChange={(e)=>setCreditLimit(e.target.value)}
         />
-
 
         <input
-          placeholder="Current balance"
+          placeholder="Balance"
           type="number"
           value={balance}
-          onChange={(e)=>
-            setBalance(e.target.value)
-          }
+          onChange={(e)=>setBalance(e.target.value)}
         />
-
 
         <input
           type="date"
           value={dueDate}
-          onChange={(e)=>
-            setDueDate(e.target.value)
-          }
+          onChange={(e)=>setDueDate(e.target.value)}
         />
-
 
         <input
           placeholder="Minimum payment"
           type="number"
           value={minimumPayment}
-          onChange={(e)=>
-            setMinimumPayment(e.target.value)
-          }
+          onChange={(e)=>setMinimumPayment(e.target.value)}
         />
 
-
-        <button onClick={addCard}>
-          Add Card 💳
+        <button onClick={saveCard}>
+          {editingCard ? "Save Changes ✏️" : "Add Card 💳"}
         </button>
 
       </div>
-
-
 
 
 
@@ -236,64 +327,79 @@ function CreditCard({ user }) {
 
         <div className="card" key={card.id}>
 
-
           <h2>
             💳 {card.card_name}
           </h2>
 
-
           <p>
-            Balance:
-            {" "}
-            ${Number(card.balance).toFixed(2)}
+            Balance: ${Number(card.balance).toFixed(2)}
           </p>
-
 
           <p>
             Available:
-            {" "}
-            ${(Number(card.credit_limit) -
+            $
+            {(Number(card.credit_limit) -
             Number(card.balance)).toFixed(2)}
           </p>
 
 
-          <p>
-            Due:
-            {" "}
-            {card.due_date || "Not set"}
-          </p>
+          <button onClick={() => editCard(card)}>
+            ✏️ Edit
+          </button>
 
 
-          <button
-            onClick={() =>
-              makePayment(card)
-            }
-          >
+          <button onClick={() => deleteCard(card)}>
+            🗑️ Delete
+          </button>
+
+
+          <button onClick={() => addPayment(card)}>
             💰 Make Payment
           </button>
 
 
 
           <h3>
-            Payment History
+            Payments
           </h3>
 
 
           {payments
             .filter(
-              (payment)=>
-              payment.card_id === card.id
+              (p)=>p.card_id === card.id
             )
             .map((payment)=>(
 
-              <p key={payment.id}>
-                -${Number(payment.amount).toFixed(2)}
-                {" "}
-                on {payment.payment_date}
-              </p>
+              <div key={payment.id}>
+
+                <p>
+                  -${Number(payment.amount).toFixed(2)}
+                  {" "}
+                  {payment.payment_date}
+                </p>
+
+
+                <button
+                  onClick={() =>
+                    editPayment(payment, card)
+                  }
+                >
+                  ✏️
+                </button>
+
+
+                <button
+                  onClick={() =>
+                    deletePayment(payment, card)
+                  }
+                >
+                  🗑️
+                </button>
+
+
+              </div>
 
             ))}
-
 
 
         </div>
@@ -301,12 +407,10 @@ function CreditCard({ user }) {
       ))}
 
 
-
     </div>
 
   );
 
 }
-
 
 export default CreditCard;
