@@ -454,21 +454,8 @@ if (page === "account") {
 
 
 
-      <section className="cards">
-
-     <div className="card">
-        <h2>💰 Monthly Income</h2>
-       <p>
-          ${monthlyIncome.toFixed(2)}
-       </p>
-     </div>
-
-
-      <div className="card">
-        <h2>🌿 Available After Expenses</h2>
-        <p>
-          ${availableMoney.toFixed(2)}
-        </p><section className="cards">
+  
+        <section className="cards">
 
 
 <div
