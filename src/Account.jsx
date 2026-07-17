@@ -6,7 +6,7 @@ function Account({ user, onProfileUpdate }) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState(user.email);
   const [loading, setLoading] = useState(false);
-
+  const [theme, setTheme] = useState("sage");
 
 useEffect(() => {
 
@@ -14,7 +14,7 @@ useEffect(() => {
 
     const { data, error } = await supabase
       .from("profiles")
-      .select("display_name")
+      .select("display_name, theme")
       .eq("user_id", user.id)
       .maybeSingle();
 
@@ -26,8 +26,14 @@ useEffect(() => {
 
 
     if (data) {
-      setName(data.display_name);
-    }
+
+  setName(data.display_name);
+
+  setTheme(
+    data.theme || "sage"
+  );
+
+}
 
   }
 
@@ -91,6 +97,30 @@ if (onProfileUpdate) {
 setLoading(false);
 }
 
+  async function updateTheme() {
+
+  const { error } = await supabase
+    .from("profiles")
+    .update({
+      theme: theme
+    })
+    .eq("user_id", user.id);
+
+
+  if (error) {
+    alert(error.message);
+    return;
+  }
+
+
+  alert("Theme updated 🌸");
+
+
+  if (onProfileUpdate) {
+    onProfileUpdate();
+  }
+
+}
 
   async function changePassword() {
 
@@ -171,6 +201,54 @@ Name
 
 </div>
 
+      <div className="card">
+
+<h2>
+🎨 Theme
+</h2>
+
+
+<select
+  value={theme}
+  onChange={(e)=>
+    setTheme(e.target.value)
+  }
+>
+
+<option value="sage">
+🌿 Sage Meadow
+</option>
+
+
+<option value="pink">
+🌸 Cherry Blossom
+</option>
+
+
+<option value="blue">
+💙 Ocean Breeze
+</option>
+
+
+<option value="purple">
+💜 Lavender Fields
+</option>
+
+
+<option value="dark">
+🌙 Night Meadow
+</option>
+
+
+</select>
+
+
+<button onClick={updateTheme}>
+Save Theme 🎨
+</button>
+
+
+</div>
       <div className="card">
 
         <h2>
