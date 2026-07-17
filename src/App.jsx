@@ -211,6 +211,11 @@ const cruiseTotal = cruiseItems.reduce(
     total + Number(item.total_amount),
   0
 );
+
+  const cruisePercentage =
+  cruiseTotal > 0
+    ? (cruisePaid / cruiseTotal) * 100
+    : 0;
   
   const upcomingBills = bills
   .filter((bill) => !bill.paid)
@@ -454,13 +459,27 @@ if (page === "income") {
 
 
 
-        <div className="card">
-         <h2>🚢 Cruise Fund</h2>
-<p>
-  ${cruisePaid.toFixed(2)} / ${cruiseTotal.toFixed(2)}
-</p>
-        </div>
+       <div className="card">
+  <h2>🚢 Cruise Fund</h2>
 
+  <p>
+    ${cruisePaid.toFixed(2)} / ${cruiseTotal.toFixed(2)}
+  </p>
+
+  <div className="progress-bar">
+    <div
+      className="progress-fill"
+      style={{
+        width: `${cruisePercentage}%`,
+      }}
+    ></div>
+  </div>
+
+  <small>
+    {cruisePercentage.toFixed(0)}% complete
+  </small>
+
+</div>
 
 
         <div className="card">
