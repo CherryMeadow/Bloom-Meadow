@@ -62,7 +62,6 @@ async function loadBudget() {
             user_id: user.id,
             checking: 0,
             savings: 0,
-            cruise_goal: 0,
             credit_card_balance: 0,
           },
         ])
