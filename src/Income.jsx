@@ -1,112 +1,184 @@
 import React, { useEffect, useState } from "react";
 import { supabase } from "./supabaseClient";
 
-function Income({ user }) {
+function Income({ user, onIncomeUpdated }) {
+
   const [income, setIncome] = useState([]);
+
   const [jobName, setJobName] = useState("");
   const [hourlyRate, setHourlyRate] = useState("");
   const [hoursPerWeek, setHoursPerWeek] = useState("");
+  const [paySchedule, setPaySchedule] = useState("Weekly");
+
+  const [editingIncome, setEditingIncome] = useState(null);
+
 
 
   useEffect(() => {
-    if (user) {
+    if(user){
       loadIncome();
     }
-  }, [user]);
+  },[user]);
 
 
-  async function loadIncome() {
-    const { data, error } = await supabase
+
+  async function loadIncome(){
+
+    const {data,error} = await supabase
       .from("income")
       .select("*")
-      .eq("user_id", user.id)
-      .order("created_at", { ascending: false });
+      .eq("user_id",user.id)
+      .order("created_at",{ascending:false});
 
 
-    if (error) {
+    if(error){
       console.log(error);
       return;
     }
 
+
     setIncome(data || []);
+
   }
 
 
 
-  async function addIncome() {
 
-    if (!jobName || !hourlyRate || !hoursPerWeek) {
-      alert("Please fill in all fields.");
+
+  async function saveIncome(){
+
+    if(!jobName || !hourlyRate || !hoursPerWeek){
+      alert("Please fill out all fields.");
       return;
     }
 
 
-    const { error } = await supabase
-      .from("income")
-      .insert([
-        {
-          user_id: user.id,
-          job_name: jobName,
-          hourly_rate: Number(hourlyRate),
-          hours_per_week: Number(hoursPerWeek),
-        },
-      ]);
+
+    const incomeData = {
+
+      job_name: jobName,
+      hourly_rate:Number(hourlyRate),
+      hours_per_week:Number(hoursPerWeek),
+      pay_schedule:paySchedule,
+
+    };
 
 
-    if (error) {
-      alert(error.message);
-      console.log(error);
-      return;
+
+    if(editingIncome){
+
+
+      const {error}=await supabase
+        .from("income")
+        .update(incomeData)
+        .eq("id",editingIncome.id);
+
+
+
+      if(error){
+        alert(error.message);
+        return;
+      }
+
+
+
+    }else{
+
+
+      const {error}=await supabase
+        .from("income")
+        .insert([
+          {
+            user_id:user.id,
+            ...incomeData,
+          }
+        ]);
+
+
+
+      if(error){
+        alert(error.message);
+        return;
+      }
+
+
     }
 
+
+
+    clearForm();
+    loadIncome();
+
+    if(onIncomeUpdated){
+      onIncomeUpdated();
+    }
+
+  }
+
+
+
+
+
+  function editJob(job){
+
+    setEditingIncome(job);
+
+    setJobName(job.job_name);
+    setHourlyRate(job.hourly_rate);
+    setHoursPerWeek(job.hours_per_week);
+    setPaySchedule(job.pay_schedule);
+
+  }
+
+
+
+
+
+  function clearForm(){
+
+    setEditingIncome(null);
 
     setJobName("");
     setHourlyRate("");
     setHoursPerWeek("");
+    setPaySchedule("Weekly");
 
-    await loadIncome();
   }
 
 
 
 
-  async function deleteIncome(id) {
 
-    const { error } = await supabase
-      .from("income")
-      .delete()
-      .eq("id", id);
+  async function deleteJob(id){
 
-
-    if (error) {
-      console.log(error);
+    if(!window.confirm("Delete this job?")){
       return;
     }
 
 
-    await loadIncome();
+    await supabase
+      .from("income")
+      .delete()
+      .eq("id",id);
+
+
+    loadIncome();
+
+
+    if(onIncomeUpdated){
+      onIncomeUpdated();
+    }
+
   }
 
 
 
-  const weeklyIncome = income.reduce(
-    (total, job) =>
-      total +
-      Number(job.hourly_rate) *
-      Number(job.hours_per_week),
-    0
-  );
-
-
-  const monthlyIncome = weeklyIncome * 4.33;
-
-
-  const yearlyIncome = weeklyIncome * 52;
-
 
 
   return (
+
     <div className="section">
+
 
       <h1>
         💰 Income
@@ -116,104 +188,127 @@ function Income({ user }) {
 
       <div className="card">
 
-        <h2>
-          Weekly
-        </h2>
-
-        <p>
-          ${weeklyIncome.toFixed(2)}
-        </p>
-
-
-        <h2>
-          Monthly
-        </h2>
-
-        <p>
-          ${monthlyIncome.toFixed(2)}
-        </p>
-
-
-        <h2>
-          Yearly
-        </h2>
-
-        <p>
-          ${yearlyIncome.toFixed(2)}
-        </p>
-
-      </div>
-
-
-
-
-      <div className="card">
 
         <input
           placeholder="Job name"
           value={jobName}
-          onChange={(e) =>
+          onChange={(e)=>
             setJobName(e.target.value)
           }
         />
 
 
+
         <input
-          placeholder="Hourly rate"
           type="number"
+          placeholder="Hourly rate"
           value={hourlyRate}
-          onChange={(e) =>
+          onChange={(e)=>
             setHourlyRate(e.target.value)
           }
         />
 
 
+
         <input
-          placeholder="Hours per week"
           type="number"
+          placeholder="Hours per week"
           value={hoursPerWeek}
-          onChange={(e) =>
+          onChange={(e)=>
             setHoursPerWeek(e.target.value)
           }
         />
 
 
-        <button onClick={addIncome}>
-          Add Income 🌱
+
+        <select
+          value={paySchedule}
+          onChange={(e)=>
+            setPaySchedule(e.target.value)
+          }
+        >
+
+          <option>Weekly</option>
+          <option>Biweekly</option>
+          <option>Monthly</option>
+
+        </select>
+
+
+
+
+        <button onClick={saveIncome}>
+
+          {editingIncome
+            ? "Save Changes ✏️"
+            : "Add Job 💰"}
+
         </button>
+
 
       </div>
 
 
 
 
-      <h2>
-        Jobs
-      </h2>
+
+      {income.map((job)=>(
+
+        <div
+          className="card"
+          key={job.id}
+        >
 
 
-
-      {income.map((job) => (
-
-        <div className="card" key={job.id}>
-
-          <h3>
-            {job.job_name}
-          </h3>
+          <h2>
+            💼 {job.job_name}
+          </h2>
 
 
           <p>
-            ${job.hourly_rate}/hr
+            ${Number(job.hourly_rate).toFixed(2)}
+            /hr
           </p>
 
 
           <p>
-            {job.hours_per_week} hrs/week
+            {job.hours_per_week}
+            {" "}
+            hours/week
           </p>
+
+
+          <p>
+            📅 {job.pay_schedule}
+          </p>
+
+
+
+          <p>
+            Weekly:
+            {" "}
+            $
+            {(Number(job.hourly_rate) *
+            Number(job.hours_per_week))
+            .toFixed(2)}
+          </p>
+
 
 
           <button
-            onClick={() => deleteIncome(job.id)}
+            onClick={()=>
+              editJob(job)
+            }
+          >
+            ✏️ Edit
+          </button>
+
+
+
+          <button
+            onClick={()=>
+              deleteJob(job.id)
+            }
           >
             🗑️ Delete
           </button>
@@ -224,8 +319,11 @@ function Income({ user }) {
       ))}
 
 
+
     </div>
+
   );
+
 }
 
 
