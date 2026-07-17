@@ -52,7 +52,7 @@ async function updateName() {
     setLoading(false);
     return;
   }
-
+ 
 
   alert("Name updated 🌸");
   setLoading(false);
