@@ -75,8 +75,8 @@ function Expenses({ user, onExpenseAdded }) {
 if (onExpenseAdded) {
   onExpenseAdded();
 }
-
-
+  }
+  
   async function deleteExpense(id) {
 
     const { error } = await supabase
