@@ -3,6 +3,7 @@ import { supabase } from "./supabaseClient";
 
 function Account({ user }) {
 
+  const [name, setName] = useState("");
   const [email, setEmail] = useState(user.email);
   const [loading, setLoading] = useState(false);
 
@@ -74,7 +75,25 @@ function Account({ user }) {
   }
 
 
+async function updateName() {
 
+  const { error } = await supabase
+    .from("profiles")
+    .update({
+      display_name: name
+    })
+    .eq("user_id", user.id);
+
+
+  if (error) {
+    alert(error.message);
+    return;
+  }
+
+
+  alert("Name updated 🌸");
+
+}
 
 
   async function logout(){
@@ -97,7 +116,25 @@ function Account({ user }) {
       </h1>
 
 
+<div className="card">
 
+<h2>
+Name
+</h2>
+
+<input
+  value={name}
+  placeholder="Enter your name"
+  onChange={(e)=>
+    setName(e.target.value)
+  }
+/>
+
+<button onClick={updateName}>
+  Save Name 🌸
+</button>
+
+</div>
 
       <div className="card">
 
