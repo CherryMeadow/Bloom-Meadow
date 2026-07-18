@@ -639,9 +639,9 @@ input[type="checkbox"] {
 
 .birthday-container {
   margin-top: 15px;
-  display: flex;
-  justify-content: center;
+  position: relative;
 }
+
 
 .birthday-button {
   padding: 12px 24px;
@@ -649,17 +649,71 @@ input[type="checkbox"] {
   border: none;
   cursor: pointer;
   font-size: 16px;
-  transition: transform 0.2s ease;
+  transition: transform 0.3s ease;
 }
 
+
 .birthday-button:hover {
-  transform: scale(1.05);
+  transform: scale(1.08);
 }
+
+
+/* Birthday card opening animation */
 
 .birthday-card {
   margin-top: 15px;
   padding: 20px;
   border-radius: 20px;
   text-align: center;
+  animation: bloomOpen 0.6s ease;
 }
 
+
+@keyframes bloomOpen {
+
+  from {
+    opacity: 0;
+    transform: scale(0.7) translateY(-20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+
+}
+
+
+/* Falling petals */
+
+.birthday-container::before {
+  content: "🌸 🌷 🌸 🌷 🌸";
+  position: absolute;
+  top: -80px;
+  left: 0;
+  width: 100%;
+  font-size: 22px;
+  animation: petals 6s linear infinite;
+  pointer-events: none;
+}
+
+
+@keyframes petals {
+
+  0% {
+    transform: translateY(-50px);
+    opacity: 0;
+  }
+
+
+  20% {
+    opacity: 1;
+  }
+
+
+  100% {
+    transform: translateY(350px);
+    opacity: 0;
+  }
+
+}
