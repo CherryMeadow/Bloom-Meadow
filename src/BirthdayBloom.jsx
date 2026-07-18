@@ -34,7 +34,11 @@ if (!isBirthday) {
 
     <div className={`birthday-container ${open ? "open" : ""}`}>
 
-
+{open && (
+  <div className="petals">
+    🌸 🌷 🌸 🌷 🌸 🌸
+  </div>
+)}
       {!open ? (
 
  <button
