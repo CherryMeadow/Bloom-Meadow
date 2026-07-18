@@ -432,12 +432,7 @@ button:hover {
 
 
 .app.pink {
-  background:
-    linear-gradient(
-      180deg,
-      #fff0f6 0%,
-      #fff8fb 100%
-    );
+  background: hotpink;
 }
 
 
