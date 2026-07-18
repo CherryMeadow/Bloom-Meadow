@@ -388,18 +388,17 @@ if (page === "money") {
 
 if (page === "credit") {
   return (
-  <div className={`app ${profile?.theme || "sage"}`}>
+  <Layout
+    profile={profile}
+    setPage={setPage}
+  >
 
-      <CreditCard user={user} />
+    <CreditCard
+      user={user}
+    />
 
-      <nav className="nav">
-        <button onClick={() => setPage("home")}>
-          🌱 Home
-        </button>
-      </nav>
-
-    </div>
-  );
+  </Layout>
+);
 }
 
 
