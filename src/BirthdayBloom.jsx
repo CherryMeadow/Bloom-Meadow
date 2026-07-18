@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 
 function BirthdayBloom({ profile }) {
-
+  
+console.log("Profile birthday:", profile?.birthday);
+  
   const [open, setOpen] = useState(false);
 
 
