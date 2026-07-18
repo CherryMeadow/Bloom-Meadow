@@ -9,10 +9,11 @@ import Goals from "./Goals.jsx";
 import CreditCard from "./CreditCard.jsx";
 import Account from "./Account.jsx";
 import Dashboard from "./Dashboard.jsx";
-import { supabase } from "./supabaseClient";
 import Navigation from "./Navigation.jsx";
+import Layout from "./Layout.jsx";
 import Money from "./Money.jsx";
 import "./index.css";
+import { supabase } from "./supabaseClient";
 
 function App() {
   const [user, setUser] = useState(null);
