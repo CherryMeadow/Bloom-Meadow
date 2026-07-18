@@ -716,3 +716,33 @@ input[type="checkbox"] {
   }
 
 }
+.petals {
+  position: absolute;
+  top: -60px;
+  left: 0;
+  width: 100%;
+  font-size: 25px;
+  animation: fallingPetals 4s linear infinite;
+  pointer-events: none;
+}
+
+
+@keyframes fallingPetals {
+
+  0% {
+    transform: translateY(-50px);
+    opacity: 0;
+  }
+
+
+  20% {
+    opacity: 1;
+  }
+
+
+  100% {
+    transform: translateY(250px);
+    opacity: 0;
+  }
+
+}
