@@ -26,10 +26,20 @@ return (
 
 const birthday = new Date(profile.birthday);
 
+if (!profile?.birthday) {
+  return null;
+}
+
+const today = new Date();
+const birthday = new Date(profile.birthday);
+
 const isBirthday =
   today.getMonth() === birthday.getMonth() &&
   today.getDate() === birthday.getDate();
 
+if (!isBirthday) {
+  return null;
+}
 
 if (!isBirthday) {
   return null;
