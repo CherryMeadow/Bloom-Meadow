@@ -21,7 +21,7 @@ function App() {
   const [bills, setBills] = useState([]);
   const [cruiseItems, setCruiseItems] = useState([]);
   const [profile, setProfile] = useState(null);
-  
+  const [money, setMoney] = useState([]);
  
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
@@ -45,7 +45,8 @@ function App() {
     loadBudget();
     loadExpenses();
     loadProfile();
-
+    loadMoney();
+    
     loadIncome().then((data) => {
       setIncome(data);
     });
@@ -172,6 +173,21 @@ async function loadBudget() {
     setExpenses(data || []);
   }
 
+  async function loadMoney() {
+
+  const { data, error } = await supabase
+    .from("money")
+    .select("*")
+    .eq("user_id", user.id);
+
+  if (error) {
+    console.log(error);
+    return;
+  }
+
+  setMoney(data || []);
+}
+  
 async function loadProfile() {
 
   const { data, error } = await supabase
@@ -301,8 +317,15 @@ const monthlyExpenses = expenses.reduce(
   0
 );
 
+const extraMoney = money.reduce(
+  (total, item) => total + Number(item.amount),
+  0
+);
+
 const availableMoney =
-  monthlyIncome - monthlyExpenses;
+  monthlyIncome +
+  extraMoney -
+  monthlyExpenses;
   
 const cruisePaid = cruiseItems.reduce(
   (total, item) =>
@@ -449,13 +472,17 @@ if (page === "income") {
          📅 Bills
        </button>
         
-<button onClick={() => setPage("income")}>
-  💰 Income
-</button>
+      <button onClick={() => setPage("income")}>
+       💰 Income
+      </button>
         
-   <button onClick={() => setPage("cruise")}>
-  🚢 Cruise
-</button>     
+      <button onClick={() => setPage("money")}>
+     🌱 Money
+     </button>      
+        
+     <button onClick={() => setPage("cruise")}>
+    🚢 Cruise
+    </button>     
         
     <button onClick={() => setPage("goals")}>
   🌸 Goals
