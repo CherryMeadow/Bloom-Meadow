@@ -686,7 +686,7 @@ input[type="checkbox"] {
 
 /* Falling petals */
 
-.birthday-container::before {
+.birthday-container.open::before {
   content: "🌸 🌷 🌸 🌷 🌸";
   position: absolute;
   top: -80px;
@@ -694,7 +694,6 @@ input[type="checkbox"] {
   width: 100%;
   font-size: 22px;
   animation: petals 6s linear infinite;
-  pointer-events: none;
 }
 
 
