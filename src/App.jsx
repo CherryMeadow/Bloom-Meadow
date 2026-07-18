@@ -363,8 +363,7 @@ if (page === "bills") {
   
 if (page === "goals") {
   return (
-    <div className="app">
-
+   <div className={`app ${profile?.theme || "sage"}`}>
       <Goals user={user} />
 
       <nav className="nav">
@@ -401,7 +400,7 @@ if (page === "goals") {
   
 if (page === "cruise") {
   return (
-    <div className="app">
+   <div className={`app ${profile?.theme || "sage"}`}>
 
       <Cruise user={user} />
 
@@ -432,8 +431,7 @@ if (page === "cruise") {
   
 if (page === "income") {
   return (
-    <div className="app">
-
+   <div className={`app ${profile?.theme || "sage"}`}>
       <Income user={user} />
 
       <nav className="nav">
@@ -470,7 +468,7 @@ if (page === "income") {
   if (page === "expenses") {
 
     return (
-      <div className="app">
+  <div className={`app ${profile?.theme || "sage"}`}>
 
         <Expenses 
   user={user} 
@@ -502,7 +500,7 @@ if (page === "income") {
 
 if (page === "credit") {
   return (
-    <div className="app">
+  <div className={`app ${profile?.theme || "sage"}`}>
 
       <CreditCard user={user} />
 
@@ -519,7 +517,7 @@ if (page === "credit") {
 
 if (page === "account") {
   return (
-    <div className="app">
+   <div className={`app ${profile?.theme || "sage"}`}>
 
     <Account 
       user={user} 
