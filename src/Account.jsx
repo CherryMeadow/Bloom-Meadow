@@ -200,9 +200,9 @@ Name
   }
 />
 
-  <label>
+  <h2>
   🎂 Birthday
-</label>
+</h2>
 
 <input
   type="date"
