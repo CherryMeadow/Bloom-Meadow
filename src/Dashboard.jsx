@@ -36,8 +36,15 @@ const checkingSpent = expenses
     );
 
 
-  const currentChecking =
-    Number(budget.checking) - checkingSpent;
+ const extraMoney = money.reduce(
+  (total, item) => total + Number(item.amount),
+  0
+);
+
+const currentChecking =
+  Number(budget.checking) +
+  extraMoney -
+  checkingSpent;
 
 
   const currentSavings =
@@ -59,10 +66,7 @@ const monthlyExpenses = expenses.reduce(
   0
 );
 
-const extraMoney = money.reduce(
-  (total, item) => total + Number(item.amount),
-  0
-);
+
 
 const availableMoney =
   monthlyIncome +
