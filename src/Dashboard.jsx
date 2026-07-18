@@ -1,5 +1,6 @@
 import React from "react";
 import Navigation from "./Navigation.jsx";
+import Header from "./Header.jsx";
 
 function Dashboard({
   profile,
@@ -99,22 +100,10 @@ const cruiseTotal = cruiseItems.reduce(
   <div className={`app ${profile?.theme || "sage"}`}>
 
 
-      <header className="header">
-
-        <h1>
-          🌸 Bloom Meadow
-        </h1>
-
-        <p>
-          Welcome back, {profile?.display_name || "there"} 🌿
-        </p>
-
-
-        <button onClick={logout}>
-          Log Out
-        </button>
-
-      </header>
+     <Header
+  profile={profile}
+  logout={logout}
+/>
 
 
 
