@@ -376,24 +376,17 @@ if (page === "income") {
   
 if (page === "money") {
   return (
-    <div className={`app ${profile?.theme || "sage"}`}>
+  <Layout
+    profile={profile}
+    setPage={setPage}
+  >
 
-      <Money user={user} />
+    <Money
+      user={user}
+    />
 
-      <nav className="nav">
-
-        <button onClick={() => setPage("home")}>
-          🌱 Home
-        </button>
-
-        <button onClick={() => setPage("money")}>
-          🌱 Money
-        </button>
-
-      </nav>
-
-    </div>
-  );
+  </Layout>
+);
 }  
 
   
