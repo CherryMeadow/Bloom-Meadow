@@ -636,3 +636,16 @@ input[type="checkbox"] {
   vertical-align: middle;
   margin-right: 8px;
 }
+
+.birthday-container {
+  margin-top: 15px;
+  display: flex;
+  justify-content: center;
+}
+
+.birthday-button {
+  padding: 12px 20px;
+  border-radius: 20px;
+  border: none;
+  cursor: pointer;
+}
