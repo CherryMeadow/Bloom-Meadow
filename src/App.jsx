@@ -425,33 +425,18 @@ if (page === "money") {
   if (page === "expenses") {
 
     return (
-  <div className={`app ${profile?.theme || "sage"}`}>
+  <Layout
+    profile={profile}
+    setPage={setPage}
+  >
 
-        <Expenses 
-  user={user} 
-  onExpenseAdded={loadExpenses}
-/>
-        <nav className="nav">
+    <Expenses
+      user={user}
+      onExpenseAdded={loadExpenses}
+    />
 
-          <button onClick={() => setPage("home")}>
-            🌱 Home
-          </button>
-
-          <button>
-            💸 Expenses
-          </button>
-
-         <button onClick={() => setPage("bills")}>
-  📅 Bills
-</button>
-          <button>
-            🌸 Goals
-          </button>
-
-        </nav>
-
-      </div>
-    );
+  </Layout>
+);
   }
 
 
