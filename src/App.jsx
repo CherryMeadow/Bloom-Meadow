@@ -10,6 +10,7 @@ import CreditCard from "./CreditCard.jsx";
 import Account from "./Account.jsx";
 import Dashboard from "./Dashboard.jsx";
 import { supabase } from "./supabaseClient";
+import Navigation from "./Navigation.jsx";
 import Money from "./Money.jsx";
 import "./index.css";
 
