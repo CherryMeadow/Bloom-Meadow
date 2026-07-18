@@ -16,7 +16,7 @@ useEffect(() => {
     const { data, error } = 
       await supabase
       .from("profiles")
-      .select("display_name, theme")
+     .select("display_name, theme, birthday")
       .eq("user_id", user.id)
       .maybeSingle();
 
@@ -93,7 +93,7 @@ async function updateName() {
   }
  
 
-alert("Name updated 🌸");
+alert("Profile updated 🌸");
 
 if (onProfileUpdate) {
   onProfileUpdate();
