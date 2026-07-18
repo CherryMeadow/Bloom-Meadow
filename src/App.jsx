@@ -9,6 +9,7 @@ import Goals from "./Goals.jsx";
 import CreditCard from "./CreditCard.jsx";
 import Account from "./Account.jsx";
 import { supabase } from "./supabaseClient";
+import Money from "./Money.jsx";
 import "./index.css";
 
 function App() {
@@ -464,6 +465,29 @@ if (page === "income") {
     </div>
   );
 }
+  
+if (page === "money") {
+  return (
+    <div className={`app ${profile?.theme || "sage"}`}>
+
+      <Money user={user} />
+
+      <nav className="nav">
+
+        <button onClick={() => setPage("home")}>
+          🌱 Home
+        </button>
+
+        <button onClick={() => setPage("money")}>
+          🌱 Money
+        </button>
+
+      </nav>
+
+    </div>
+  );
+}  
+
   
   if (page === "expenses") {
 
