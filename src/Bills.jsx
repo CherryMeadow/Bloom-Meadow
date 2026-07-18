@@ -183,10 +183,8 @@ function Bills({ user }) {
 
 
 
-
-  return(
-
-    <div className="section">
+return (
+  <div className={`app ${profile?.theme || "sage"}`}>
 
 
       <h1>
