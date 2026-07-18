@@ -184,8 +184,7 @@ function Bills({ user, profile }) {
 
 
 return (
- <div className="app sage">
-
+ <div className={`app ${profile?.theme || "sage"}`}>
 
       <h1>
         📅 Bills
