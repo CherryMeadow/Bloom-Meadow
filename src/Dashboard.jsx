@@ -1,6 +1,7 @@
 import React from "react";
 import Navigation from "./Navigation.jsx";
 import Header from "./Header.jsx";
+import BirthdayBloom from "./BirthdayBloom.jsx";
 
 function Dashboard({
   profile,
@@ -106,7 +107,9 @@ const cruiseTotal = cruiseItems.reduce(
 />
 
 
-
+<BirthdayBloom
+  profile={profile}
+/>
   
         <section className="cards">
 
