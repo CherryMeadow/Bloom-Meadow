@@ -13,18 +13,21 @@ console.log(profile);
 
 
   const today = new Date();
-  const birthday = new Date(profile.birthday);
+
+const birthday = new Date(profile.birthday + "T00:00:00");
+  
+console.log("Birthday from profile:", profile.birthday);
+console.log("Today:", today);
+console.log("Birthday date:", birthday);
+
+const isBirthday =
+  today.getMonth() === birthday.getMonth() &&
+  today.getDate() === birthday.getDate();
 
 
-  const isBirthday =
-    today.getMonth() === birthday.getMonth() &&
-    today.getDate() === birthday.getDate();
-
-
-  if (!isBirthday) {
-    return null;
-  }
-
+if (!isBirthday) {
+  return null;
+}
 
   return (
 
