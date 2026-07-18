@@ -4,8 +4,9 @@ function BirthdayBloom({ profile }) {
   
 console.log(profile);
   
-  const [open, setOpen] = useState(false);
-
+ const [open, setOpen] = useState(
+  localStorage.getItem("birthdayGiftOpened") === "true"
+);
 
   if (!profile?.birthday) {
     return null;
@@ -38,7 +39,10 @@ if (!isBirthday) {
 
  <button
   className="birthday-button"
-  onClick={() => setOpen(true)}
+ onClick={() => {
+  setOpen(true);
+  localStorage.setItem("birthdayGiftOpened", "true");
+}}
 >
   🎁 Open Your Birthday Gift 🌸
 </button>
