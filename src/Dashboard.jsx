@@ -100,16 +100,16 @@ const cruiseTotal = cruiseItems.reduce(
     return (
   <div className={`app ${profile?.theme || "sage"}`}>
 
-
-     <Header
+<Header
   profile={profile}
   logout={logout}
-/>
+>
 
+  <BirthdayBloom
+    profile={profile}
+  />
 
-<BirthdayBloom
-  profile={profile}
-/>
+</Header>
   
         <section className="cards">
 
