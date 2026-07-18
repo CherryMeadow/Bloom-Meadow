@@ -2,7 +2,8 @@ import React from "react";
 
 function Header({
   profile,
-  logout
+  logout,
+  children
 }) {
 
   return (
@@ -19,7 +20,8 @@ function Header({
       <button onClick={logout}>
         Log Out
       </button>
-
+     {children}
+      
     </header>
   );
 
