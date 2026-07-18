@@ -537,7 +537,7 @@ if (page === "account") {
 }
 
   return (
-    <div className="app">
+  <div className={`app ${profile?.theme || "sage"}`}>
 
 
       <header className="header">
