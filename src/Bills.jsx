@@ -184,7 +184,7 @@ function Bills({ user, profile }) {
 
 
 return (
-  <div className={`app ${profile?.theme || "sage"}`}>
+ <div className="app sage">
 
 
       <h1>
