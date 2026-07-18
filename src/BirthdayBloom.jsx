@@ -4,7 +4,9 @@ function BirthdayBloom({ profile }) {
   
 console.log(profile);
   
- const [open, setOpen] = useState(false);
+ const [open, setOpen] = useState(
+  localStorage.getItem("birthdayGiftOpened") === "true"
+);
 
   if (!profile?.birthday) {
     return null;
