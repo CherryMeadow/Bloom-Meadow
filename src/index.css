@@ -483,3 +483,57 @@ button:hover {
 .app.dark .card p {
   color: #d7f3e3;
 }
+/* Theme Card Styles */
+
+.app.sage .card {
+  border-left-color: #9bc7b1;
+}
+
+
+.app.pink .card {
+  border-left-color: #FFB7C5;
+}
+
+
+.app.blue .card {
+  border-left-color: #9ecbff;
+}
+
+
+.app.purple .card {
+  border-left-color: #cbb7ff;
+}
+
+
+.app.dark .card {
+  border-left-color: #7dd3fc;
+  background: #273444;
+  color: white;
+}
+
+
+/* Theme button styles */
+
+.app.sage button {
+  color: #507d74;
+}
+
+
+.app.pink button {
+  color: #d66b87;
+}
+
+
+.app.blue button {
+  color: #4d7ea8;
+}
+
+
+.app.purple button {
+  color: #7656a8;
+}
+
+
+.app.dark button {
+  color: #d7f3e3;
+}
