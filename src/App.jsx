@@ -275,7 +275,7 @@ if (!budget) {
 if (page === "bills") {
   return (
     
-   <div className="app pink">
+ <div className={`app ${profile?.theme || "sage"}`}>
 
     <Bills 
   user={user}
