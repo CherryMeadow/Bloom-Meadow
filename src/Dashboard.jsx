@@ -1,4 +1,5 @@
 import React from "react";
+import Navigation from "./Navigation.jsx";
 
 function Dashboard({
   profile,
@@ -89,6 +90,7 @@ const cruiseTotal = cruiseItems.reduce(
   const upcomingBills = bills
   .filter((bill) => !bill.paid)
   .slice(0, 3);
+  
     return (
   <div className={`app ${profile?.theme || "sage"}`}>
 
@@ -295,46 +297,8 @@ Track your savings goals
 </section>
 
 
-     <nav className="nav">
-
-
-<button onClick={() => setPage("home")}>
-🌱 Home
-</button>
-
-
-<button onClick={() => setPage("expenses")}>
-💸 Expenses
-</button>
-
-
-<button onClick={() => setPage("income")}>
-💰 Income
-</button>
-
-
-<button onClick={() => setPage("cruise")}>
-🚢 Cruise
-</button>
-
-
-<button onClick={() => setPage("bills")}>
-📅 Bills
-</button>
-
-
-<button onClick={() => setPage("goals")}>
-🌸 Goals
-</button>
-
-
-<button onClick={() => setPage("account")}>
-⚙️ Account
-</button>
-
-
-</nav>
-
+   <Navigation setPage={setPage} />
+    
     </div>
   );
 
