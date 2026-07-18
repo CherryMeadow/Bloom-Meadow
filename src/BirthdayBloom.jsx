@@ -1,49 +1,28 @@
 import React, { useState } from "react";
 
 function BirthdayBloom({ profile }) {
-  
-console.log("Profile birthday:", profile?.birthday);
-  
+
   const [open, setOpen] = useState(false);
 
-return (
 
-  <div className="birthday-container">
-
-    <button
-      className="birthday-button"
-      onClick={() => setOpen(true)}
-    >
-      🌸 Open Your Birthday Gift 🌸
-    </button>
-
-  </div>
-
-);
+  if (!profile?.birthday) {
+    return null;
+  }
 
 
   const today = new Date();
+  const birthday = new Date(profile.birthday);
 
-const birthday = new Date(profile.birthday);
 
-if (!profile?.birthday) {
-  return null;
-}
+  const isBirthday =
+    today.getMonth() === birthday.getMonth() &&
+    today.getDate() === birthday.getDate();
 
-const today = new Date();
-const birthday = new Date(profile.birthday);
 
-const isBirthday =
-  today.getMonth() === birthday.getMonth() &&
-  today.getDate() === birthday.getDate();
+  if (!isBirthday) {
+    return null;
+  }
 
-if (!isBirthday) {
-  return null;
-}
-
-if (!isBirthday) {
-  return null;
-}
 
   return (
 
