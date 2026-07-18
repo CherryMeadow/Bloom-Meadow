@@ -308,31 +308,16 @@ return (
   
 if (page === "cruise") {
   return (
-   <div className={`app ${profile?.theme || "sage"}`}>
+    <Layout
+      profile={profile}
+      setPage={setPage}
+    >
 
-      <Cruise user={user} />
+      <Cruise
+        user={user}
+      />
 
-      <nav className="nav">
-
-        <button onClick={() => setPage("home")}>
-          🌱 Home
-        </button>
-
-        <button onClick={() => setPage("expenses")}>
-          💸 Expenses
-        </button>
-
-        <button onClick={() => setPage("income")}>
-          💰 Income
-        </button>
-
-        <button onClick={() => setPage("cruise")}>
-          🚢 Cruise
-        </button>
-
-      </nav>
-
-    </div>
+    </Layout>
   );
 }
 
@@ -404,20 +389,17 @@ if (page === "credit") {
 
 if (page === "account") {
   return (
-   <div className={`app ${profile?.theme || "sage"}`}>
+    <Layout
+      profile={profile}
+      setPage={setPage}
+    >
 
-    <Account 
-      user={user} 
-  onProfileUpdate={loadProfile}
-/>
+      <Account
+        user={user}
+        onProfileUpdate={loadProfile}
+      />
 
-      <nav className="nav">
-        <button onClick={() => setPage("home")}>
-          🌱 Home
-        </button>
-      </nav>
-
-    </div>
+    </Layout>
   );
 }
 
