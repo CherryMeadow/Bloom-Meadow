@@ -6,10 +6,20 @@ console.log("Profile birthday:", profile?.birthday);
   
   const [open, setOpen] = useState(false);
 
+return (
 
-  if (!profile?.birthday) {
-    return null;
-  }
+  <div className="birthday-container">
+
+    <button
+      className="birthday-button"
+      onClick={() => setOpen(true)}
+    >
+      🌸 Open Your Birthday Gift 🌸
+    </button>
+
+  </div>
+
+);
 
 
   const today = new Date();
