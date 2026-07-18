@@ -36,12 +36,12 @@ if (!isBirthday) {
 
       {!open ? (
 
-        <button
-          className="birthday-button"
-          onClick={() => setOpen(true)}
-        >
-          🌸 Open Your Birthday Gift 🌸
-        </button>
+ <button
+  className="birthday-button"
+  onClick={() => setOpen(true)}
+>
+  🎁 Open Your Birthday Gift 🌸
+</button>
 
       ) : (
 
