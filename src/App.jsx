@@ -328,7 +328,7 @@ const cruiseTotal = cruiseItems.reduce(
 if (page === "bills") {
   return (
     
-   <div className={`app ${profile?.theme || "sage"}`}>
+   <div className="app pink">
 
       <Bills user={user} />
 
