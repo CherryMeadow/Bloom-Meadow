@@ -537,3 +537,48 @@ button:hover {
 .app.dark button {
   color: #d7f3e3;
 }
+/* Theme Buttons */
+
+.app.sage button {
+  background: #7fae98;
+  color: white;
+}
+
+
+.app.pink button {
+  background: #d9869b;
+  color: white;
+}
+
+
+.app.blue button {
+  background: #6fa8dc;
+  color: white;
+}
+
+
+.app.purple button {
+  background: #9877c9;
+  color: white;
+}
+
+
+.app.dark button {
+  background: #374151;
+  color: white;
+}
+
+
+.app button {
+  border: none;
+  border-radius: 12px;
+  padding: 10px 16px;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+
+.app button:hover {
+  transform: translateY(-2px);
+  opacity: 0.9;
+}
