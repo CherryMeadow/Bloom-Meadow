@@ -7,12 +7,14 @@ function Account({ user, onProfileUpdate }) {
   const [email, setEmail] = useState(user.email);
   const [loading, setLoading] = useState(false);
   const [theme, setTheme] = useState("sage");
-
+  const [birthday, setBirthday] = useState("");
+  
 useEffect(() => {
 
   async function loadProfile() {
 
-    const { data, error } = await supabase
+    const { data, error } = 
+      await supabase
       .from("profiles")
       .select("display_name, theme")
       .eq("user_id", user.id)
@@ -29,6 +31,8 @@ useEffect(() => {
 
   setName(data.display_name);
 
+      setBirthday(data.birthday || "");
+      
   setTheme(
     data.theme || "sage"
   );
@@ -74,11 +78,12 @@ async function updateName() {
   setLoading(true);
 
   const { error } = await supabase
-    .from("profiles")
-    .update({
-      display_name: name
-    })
-    .eq("user_id", user.id);
+.from("profiles")
+.update({
+  display_name: name,
+  birthday: birthday,
+})
+.eq("user_id", user.id);
 
 
   if (error) {
@@ -195,6 +200,18 @@ Name
   }
 />
 
+  <label>
+  🎂 Birthday
+</label>
+
+<input
+  type="date"
+  value={birthday}
+  onChange={(e) =>
+    setBirthday(e.target.value)
+  }
+/>
+  
 <button onClick={updateName}>
   Save Name 🌸
 </button>
