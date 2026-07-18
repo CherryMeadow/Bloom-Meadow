@@ -20,6 +20,7 @@ function Header({
       <button onClick={logout}>
         Log Out
       </button>
+      
      {children}
       
     </header>
