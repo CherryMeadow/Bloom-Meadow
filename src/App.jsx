@@ -275,41 +275,19 @@ if (!budget) {
 
   
 if (page === "bills") {
-  return (
-    
- <div className={`app ${profile?.theme || "sage"}`}>
+ return (
+  <Layout
+    profile={profile}
+    setPage={setPage}
+  >
 
-    <Bills 
-  user={user}
-  profile={profile}
-/>
+    <Bills
+      user={user}
+      profile={profile}
+    />
 
-      <nav className="nav">
-
-        <button onClick={() => setPage("home")}>
-          🌱 Home
-        </button>
-
-        <button onClick={() => setPage("expenses")}>
-          💸 Expenses
-        </button>
-
-        <button onClick={() => setPage("income")}>
-          💰 Income
-        </button>
-
-        <button onClick={() => setPage("cruise")}>
-          🚢 Cruise
-        </button>
-
-        <button onClick={() => setPage("bills")}>
-          📅 Bills
-        </button>
-
-      </nav>
-
-    </div>
-  );
+  </Layout>
+);
 }
 
   
