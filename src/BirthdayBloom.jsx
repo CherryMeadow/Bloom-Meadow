@@ -32,7 +32,7 @@ if (!isBirthday) {
 
   return (
 
-    <div className="birthday-container">
+    <div className={`birthday-container ${open ? "open" : ""}`}>
 
 
       {!open ? (
