@@ -10,13 +10,18 @@ function BirthdayBloom({ profile }) {
   }
 
 
-  const today = new Date().toISOString().slice(0, 10);
+  const today = new Date();
+
+const birthday = new Date(profile.birthday);
+
+const isBirthday =
+  today.getMonth() === birthday.getMonth() &&
+  today.getDate() === birthday.getDate();
 
 
-  if (profile.birthday !== today) {
-    return null;
-  }
-
+if (!isBirthday) {
+  return null;
+}
 
   return (
 
