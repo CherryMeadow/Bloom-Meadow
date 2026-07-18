@@ -419,3 +419,67 @@ button:hover {
   color:#6f9891;
 
 }
+/* Themes */
+
+.app.sage {
+  background:
+    linear-gradient(
+      180deg,
+      #eef6f3 0%,
+      #f8fbf7 100%
+    );
+}
+
+
+.app.pink {
+  background:
+    linear-gradient(
+      180deg,
+      #fff0f6 0%,
+      #fff8fb 100%
+    );
+}
+
+
+.app.blue {
+  background:
+    linear-gradient(
+      180deg,
+      #edf6ff 0%,
+      #f8fbff 100%
+    );
+}
+
+
+.app.purple {
+  background:
+    linear-gradient(
+      180deg,
+      #f5efff 0%,
+      #fbf9ff 100%
+    );
+}
+
+
+.app.dark {
+  background:
+    linear-gradient(
+      180deg,
+      #1f2933 0%,
+      #111827 100%
+    );
+
+  color: white;
+}
+
+
+.app.dark .card,
+.app.dark .section {
+  background: #273444;
+  color: white;
+}
+
+
+.app.dark .card p {
+  color: #d7f3e3;
+}
