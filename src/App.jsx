@@ -277,7 +277,10 @@ if (page === "bills") {
     
    <div className="app pink">
 
-      <Bills user={user} />
+    <Bills 
+  user={user}
+  profile={profile}
+/>
 
       <nav className="nav">
 
