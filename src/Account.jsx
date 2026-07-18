@@ -213,7 +213,7 @@ Name
 />
   
 <button onClick={updateName}>
-  Save Name 🌸
+  Save 🌸
 </button>
 
 </div>
