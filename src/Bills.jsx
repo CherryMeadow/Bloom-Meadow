@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { supabase } from "./supabaseClient";
 
-function Bills({ user }) {
-
+function Bills({ user, profile }) {
+  
   const [bills, setBills] = useState([]);
 
   const [billName, setBillName] = useState("");
