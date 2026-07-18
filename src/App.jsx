@@ -361,42 +361,17 @@ if (page === "cruise") {
   
 if (page === "income") {
   return (
-   <div className={`app ${profile?.theme || "sage"}`}>
-      <Income user={user} />
+  <Layout
+    profile={profile}
+    setPage={setPage}
+  >
 
-      <nav className="nav">
+    <Income
+      user={user}
+    />
 
-        <button onClick={() => setPage("home")}>
-          🌱 Home
-        </button>
-
-        <button onClick={() => setPage("expenses")}>
-          💸 Expenses
-        </button>
-
-        <button onClick={() => setPage("bills")}>
-         📅 Bills
-       </button>
-        
-      <button onClick={() => setPage("income")}>
-       💰 Income
-      </button>
-        
-      <button onClick={() => setPage("money")}>
-     🌱 Money
-     </button>      
-        
-     <button onClick={() => setPage("cruise")}>
-    🚢 Cruise
-    </button>     
-        
-    <button onClick={() => setPage("goals")}>
-  🌸 Goals
-</button>    
-      </nav>
-
-    </div>
-  );
+  </Layout>
+);
 }
   
 if (page === "money") {
