@@ -30,3 +30,43 @@ export function calculateAvailableMoney(
   return monthlyIncome - monthlyExpenses;
 
 }
+export function calculateCheckingBalance(
+  budget,
+  expenses
+) {
+
+  const checkingSpent = expenses
+    .filter(
+      expense => expense.paid_from === "Checking"
+    )
+    .reduce(
+      (total, expense) =>
+        total + Number(expense.amount),
+      0
+    );
+
+
+  return Number(budget.checking) - checkingSpent;
+
+}
+
+
+export function calculateSavingsBalance(
+  budget,
+  expenses
+) {
+
+  const savingsSpent = expenses
+    .filter(
+      expense => expense.paid_from === "Savings"
+    )
+    .reduce(
+      (total, expense) =>
+        total + Number(expense.amount),
+      0
+    );
+
+
+  return Number(budget.savings) - savingsSpent;
+
+}
