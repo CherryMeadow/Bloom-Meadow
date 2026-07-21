@@ -1,5 +1,4 @@
 import React from "react";
-import Navigation from "./Navigation.jsx";
 import Header from "./Header.jsx";
 import BirthdayBloom from "./BirthdayBloom.jsx";
 
