@@ -290,9 +290,6 @@ Track your savings goals
 
 
 </section>
-
-
-   <Navigation setPage={setPage} />
     
     </div>
   );
