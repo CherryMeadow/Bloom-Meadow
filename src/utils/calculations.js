@@ -70,9 +70,11 @@ export function calculateSavingsBalance(
   return Number(budget.savings) - savingsSpent;
 
 }
+
 export function calculateCheckingBalance(
   budget,
-  expenses
+  expenses,
+  extraMoney = 0
 ) {
 
   const checkingSpent = expenses
@@ -87,10 +89,13 @@ export function calculateCheckingBalance(
     );
 
 
-  return Number(budget.checking) - checkingSpent;
+  return (
+    Number(budget.checking) +
+    Number(extraMoney) -
+    checkingSpent
+  );
 
 }
-
 
 export function calculateSavingsBalance(
   budget,
