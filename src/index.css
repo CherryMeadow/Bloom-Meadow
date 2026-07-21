@@ -686,46 +686,16 @@ input[type="checkbox"] {
 
 /* Falling petals */
 
-.birthday-container.open::before {
-  content: "🌸 🌷 🌸 🌷 🌸";
-  position: absolute;
-  top: -80px;
-  left: 0;
-  width: 100%;
-  font-size: 22px;
-  animation: petals 6s linear infinite;
-}
-
-
-@keyframes petals {
-
-  0% {
-    transform: translateY(-50px);
-    opacity: 0;
-  }
-
-
-  20% {
-    opacity: 1;
-  }
-
-
-  100% {
-    transform: translateY(350px);
-    opacity: 0;
-  }
-
-}
 .petals {
   position: absolute;
   top: -60px;
   left: 0;
   width: 100%;
   font-size: 25px;
-  animation: fallingPetals 4s linear infinite;
+  animation: fallingPetals 4s ease-in-out infinite;
   pointer-events: none;
+  text-align: center;
 }
-
 
 @keyframes fallingPetals {
 
