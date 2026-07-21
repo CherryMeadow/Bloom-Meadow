@@ -1,6 +1,11 @@
 import React from "react";
 import Header from "./Header.jsx";
 import BirthdayBloom from "./BirthdayBloom.jsx";
+import {
+  calculateMonthlyIncome,
+  calculateMonthlyExpenses,
+  calculateAvailableMoney
+} from "./utils/calculations.js";
 
 function Dashboard({
   profile,
@@ -13,6 +18,7 @@ function Dashboard({
   logout,
   setPage
 }) {
+  
 const checkingSpent = expenses
     .filter(
       (expense) =>
@@ -51,28 +57,15 @@ const currentChecking =
   const currentSavings =
     Number(budget.savings) - savingsSpent;
 
-const weeklyIncome = income.reduce(
-  (total, job) =>
-    total +
-    Number(job.hourly_rate) *
-    Number(job.hours_per_week),
-  0
-);
+const monthlyIncome = calculateMonthlyIncome(income);
 
-const monthlyIncome = weeklyIncome * 4.33;
-
-const monthlyExpenses = expenses.reduce(
-  (total, expense) =>
-    total + Number(expense.amount),
-  0
-);
-
-
+const monthlyExpenses = calculateMonthlyExpenses(expenses);
 
 const availableMoney =
-  monthlyIncome +
-  extraMoney -
-  monthlyExpenses;
+  calculateAvailableMoney(
+    monthlyIncome,
+    monthlyExpenses
+  ) + extraMoney;
   
 const cruisePaid = cruiseItems.reduce(
   (total, item) =>
