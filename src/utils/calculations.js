@@ -70,3 +70,45 @@ export function calculateSavingsBalance(
   return Number(budget.savings) - savingsSpent;
 
 }
+export function calculateCheckingBalance(
+  budget,
+  expenses
+) {
+
+  const checkingSpent = expenses
+    .filter(
+      (expense) =>
+        expense.payment_account === "Checking"
+    )
+    .reduce(
+      (total, expense) =>
+        total + Number(expense.amount),
+      0
+    );
+
+
+  return Number(budget.checking) - checkingSpent;
+
+}
+
+
+export function calculateSavingsBalance(
+  budget,
+  expenses
+) {
+
+  const savingsSpent = expenses
+    .filter(
+      (expense) =>
+        expense.payment_account === "Savings"
+    )
+    .reduce(
+      (total, expense) =>
+        total + Number(expense.amount),
+      0
+    );
+
+
+  return Number(budget.savings) - savingsSpent;
+
+}
