@@ -404,17 +404,26 @@ if (page === "account") {
 }
 
 return (
-  <Dashboard
+
+  <Layout
     profile={profile}
-    budget={budget}
-    income={income}
-    expenses={expenses}
-    bills={bills}
-    money={money}
-    cruiseItems={cruiseItems}
-    logout={logout}
     setPage={setPage}
-  />
+  >
+
+    <Dashboard
+      profile={profile}
+      budget={budget}
+      income={income}
+      expenses={expenses}
+      bills={bills}
+      money={money}
+      cruiseItems={cruiseItems}
+      logout={logout}
+      setPage={setPage}
+    />
+
+  </Layout>
+
 );
 }
 
