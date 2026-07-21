@@ -4,7 +4,9 @@ import BirthdayBloom from "./BirthdayBloom.jsx";
 import {
   calculateMonthlyIncome,
   calculateMonthlyExpenses,
-  calculateAvailableMoney
+  calculateAvailableMoney,
+  calculateCheckingBalance,
+  calculateSavingsBalance
 } from "./utils/calculations.js";
 
 function Dashboard({
@@ -19,30 +21,18 @@ function Dashboard({
   setPage
 }) {
   
-const checkingSpent = expenses
-    .filter(
-      (expense) =>
-        expense.payment_account === "Checking"
-    )
-    .reduce(
-      (total, expense) =>
-        total + Number(expense.amount),
-      0
-    );
+const currentChecking = calculateCheckingBalance(
+  budget,
+  expenses,
+  extraMoney
+);
 
 
-  const savingsSpent = expenses
-    .filter(
-      (expense) =>
-        expense.payment_account === "Savings"
-    )
-    .reduce(
-      (total, expense) =>
-        total + Number(expense.amount),
-      0
-    );
-
-
+const currentSavings = calculateSavingsBalance(
+  budget,
+  expenses
+);
+  
  const extraMoney = money.reduce(
   (total, item) => total + Number(item.amount),
   0
@@ -54,8 +44,6 @@ const currentChecking =
   checkingSpent;
 
 
-  const currentSavings =
-    Number(budget.savings) - savingsSpent;
 
 const monthlyIncome = calculateMonthlyIncome(income);
 
