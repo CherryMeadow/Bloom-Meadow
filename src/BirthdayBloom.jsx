@@ -26,9 +26,9 @@ const isBirthday =
   today.getDate() === birthday.getDate();
 
 
-if (!isBirthday) {
-  return null;
-}
+// if (!isBirthday) {
+//  return null;
+// }
 
   return (
 
