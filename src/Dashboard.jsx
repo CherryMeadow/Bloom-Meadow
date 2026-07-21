@@ -38,11 +38,6 @@ const currentSavings = calculateSavingsBalance(
   0
 );
 
-const currentChecking =
-  Number(budget.checking) +
-  extraMoney -
-  checkingSpent;
-
 
 
 const monthlyIncome = calculateMonthlyIncome(income);
