@@ -21,11 +21,7 @@ function Dashboard({
   setPage
 }) {
   
-const currentChecking = calculateCheckingBalance(
-  budget,
-  expenses,
-  extraMoney
-);
+
 
 
 const currentSavings = calculateSavingsBalance(
@@ -38,7 +34,11 @@ const currentSavings = calculateSavingsBalance(
   0
 );
 
-
+const currentChecking = calculateCheckingBalance(
+  budget,
+  expenses,
+  extraMoney
+);
 
 const monthlyIncome = calculateMonthlyIncome(income);
 
