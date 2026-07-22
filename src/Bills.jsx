@@ -4,7 +4,6 @@ import { supabase } from "./supabaseClient";
 function Bills({ user, profile }) {
   
   const [bills, setBills] = useState([]);
-
   const [billName, setBillName] = useState("");
   const [amount, setAmount] = useState("");
   const [dueDate, setDueDate] = useState("");
@@ -55,15 +54,17 @@ function Bills({ user, profile }) {
     }
 
 
-    const billData = {
+  const billData = {
 
-      bill_name: billName,
-      amount:Number(amount),
-      due_date:dueDate,
-      recurring,
+  bill_name: billName,
+  amount: Number(amount),
+  due_date: dueDate,
+  recurring,
+  end_date: endDate || null,
+  total_amount: Number(totalAmount) || Number(amount),
+  paid_amount: Number(paidAmount) || 0,
 
-    };
-
+};
 
 
     if(editingBill){
@@ -114,29 +115,36 @@ function Bills({ user, profile }) {
 
   function editBill(bill){
 
-    setEditingBill(bill);
+  setEditingBill(bill);
 
-    setBillName(bill.bill_name);
-    setAmount(bill.amount);
-    setDueDate(bill.due_date);
-    setRecurring(bill.recurring);
+  setBillName(bill.bill_name);
+  setAmount(bill.amount);
+  setDueDate(bill.due_date);
+  setRecurring(bill.recurring);
 
-  }
+  setEndDate(bill.end_date || "");
+  setTotalAmount(bill.total_amount || "");
+  setPaidAmount(bill.paid_amount || "");
+
+}
 
 
 
 
 
-  function clearForm(){
+ function clearForm(){
 
-    setEditingBill(null);
-    setBillName("");
-    setAmount("");
-    setDueDate("");
-    setRecurring(false);
+  setEditingBill(null);
+  setBillName("");
+  setAmount("");
+  setDueDate("");
+  setRecurring(false);
 
-  }
+  setEndDate("");
+  setTotalAmount("");
+  setPaidAmount("");
 
+}
 
 function getDaysUntilDue(date) {
 
