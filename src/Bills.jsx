@@ -304,7 +304,9 @@ return (
           <p>
   Due:
   {" "}
-  {new Date(bill.due_date).toLocaleDateString()}
+ {new Date(
+  bill.due_date + "T00:00:00"
+).toLocaleDateString()}
 </p>
 
 
