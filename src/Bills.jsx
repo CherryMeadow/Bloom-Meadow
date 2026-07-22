@@ -251,7 +251,32 @@ return (
             setAmount(e.target.value)
           }
         />
+<label>
+  Total Amount (for payment plans)
+</label>
 
+<input
+  type="number"
+  placeholder="Total owed"
+  value={totalAmount}
+  onChange={(e)=>
+    setTotalAmount(e.target.value)
+  }
+/>
+
+
+<label>
+  Amount Already Paid
+</label>
+
+<input
+  type="number"
+  placeholder="Paid so far"
+  value={paidAmount}
+  onChange={(e)=>
+    setPaidAmount(e.target.value)
+  }
+/>
 
 
         <input
@@ -262,7 +287,21 @@ return (
           }
         />
 
+{recurring && (
+  <>
+    <label>
+      Repeat Until (optional)
+    </label>
 
+    <input
+      type="date"
+      value={endDate}
+      onChange={(e)=>
+        setEndDate(e.target.value)
+      }
+    />
+  </>
+)}
 
         <label>
 
