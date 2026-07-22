@@ -211,6 +211,22 @@ const unpaidTotal = bills
     0
   );
 
+  function calculateProgress(bill) {
+
+  if (!bill.total_amount || bill.total_amount <= 0) {
+    return 0;
+  }
+
+  return Math.min(
+    100,
+    Math.round(
+      (Number(bill.paid_amount) /
+      Number(bill.total_amount)) * 100
+    )
+  );
+
+}
+  
 return (
  <div className="section">
 
@@ -332,8 +348,6 @@ return (
 
 
       {bills.map((bill)=>(
-
-
         <div
           className="card"
           key={bill.id}
@@ -348,7 +362,19 @@ return (
           <p>
             ${Number(bill.amount).toFixed(2)}
           </p>
+{bill.total_amount > 0 && (
+  <>
+    <p>
+      💳 Paid: ${Number(bill.paid_amount || 0).toFixed(2)}
+      /
+      ${Number(bill.total_amount).toFixed(2)}
+    </p>
 
+    <p>
+      🌸 {calculateProgress(bill)}% Complete
+    </p>
+  </>
+)}
 
           <p>
   Due:
