@@ -136,7 +136,20 @@ function Bills({ user, profile }) {
   }
 
 
+function getDaysUntilDue(date) {
 
+  const today = new Date();
+
+  const due = new Date(date);
+
+  const difference =
+    due - today;
+
+  return Math.ceil(
+    difference / (1000 * 60 * 60 * 24)
+  );
+
+}
 
 
   async function deleteBill(id){
@@ -181,16 +194,31 @@ function Bills({ user, profile }) {
   }
 
 
-
+const unpaidTotal = bills
+  .filter((bill) => !bill.paid)
+  .reduce(
+    (total, bill) => total + Number(bill.amount),
+    0
+  );
 
 return (
- <div className={`app ${profile?.theme || "sage"}`}>
+ <div className="section">
 
       <h1>
         📅 Bills
       </h1>
 
+<div className="card">
 
+  <h2>
+    Upcoming Bills
+  </h2>
+
+  <p>
+    ${unpaidTotal.toFixed(2)}
+  </p>
+
+</div>
 
       <div className="card">
 
@@ -274,10 +302,17 @@ return (
 
 
           <p>
-            Due:
-            {" "}
-            {bill.due_date}
-          </p>
+  Due:
+  {" "}
+  {new Date(bill.due_date).toLocaleDateString()}
+</p>
+
+
+<p>
+  {bill.paid
+    ? "✅ Paid"
+    : `⏳ Due in ${getDaysUntilDue(bill.due_date)} days`}
+</p>
 
 
           <p>
