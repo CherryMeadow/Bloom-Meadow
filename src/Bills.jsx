@@ -325,15 +325,6 @@ return (
 
 
 
-          <p>
-            {bill.paid
-              ? "✅ Paid"
-              : "⏳ Not Paid"}
-          </p>
-
-
-
-
           <button
             onClick={()=>
               togglePaid(bill)
