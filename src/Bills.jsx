@@ -9,7 +9,9 @@ function Bills({ user, profile }) {
   const [amount, setAmount] = useState("");
   const [dueDate, setDueDate] = useState("");
   const [recurring, setRecurring] = useState(false);
-
+  const [endDate, setEndDate] = useState("");
+  const [totalAmount, setTotalAmount] = useState("");
+  const [paidAmount, setPaidAmount] = useState("");
   const [editingBill, setEditingBill] = useState(null);
 
 
